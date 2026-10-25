@@ -5,285 +5,242 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Into the Wind</title>
 <style>
-:root{
-  --bg:#f4efe6; --ink:#2b2621; --muted:#7a7066; --panel:#fffaf2; --line:#e2d8c8;
-  --accent:#b8562b; --calm:#3d7ea6; --hot:#d2452c; --field:#ece4d6;
-}
+:root{ --bg:#f6f1e9; --ink:#3a3029; --muted:#9a8c7e; --rug1:#f3e7d6; --rug2:#e6d3bb; --on:#3a3029; }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#16130f; --ink:#ece4d8; --muted:#a39888; --panel:#211c17; --line:#3a322a;
-    --accent:#e38a5a; --calm:#6fb2db; --hot:#ff6e50; --field:#1d1914;
-  }
+  :root:not([data-theme="light"]){ --bg:#1d1814; --ink:#eee3d4; --muted:#8f8172; --rug1:#2d241d; --rug2:#1d1814; --on:#eee3d4; }
 }
-:root[data-theme="dark"]{
-  --bg:#16130f; --ink:#ece4d8; --muted:#a39888; --panel:#211c17; --line:#3a322a;
-  --accent:#e38a5a; --calm:#6fb2db; --hot:#ff6e50; --field:#1d1914;
-}
+:root[data-theme="dark"]{ --bg:#1d1814; --ink:#eee3d4; --muted:#8f8172; --rug1:#2d241d; --rug2:#1d1814; --on:#eee3d4; }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-header{padding:18px 20px 6px;max-width:1280px;margin:0 auto}
-h1{margin:0;font-size:22px;letter-spacing:.2px}
-.sub{margin:2px 0 0;color:var(--muted)}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;padding:12px 20px;max-width:1280px;margin:0 auto}
-@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr);padding:12px 16px}}
-.stage{position:relative;background:var(--field);border:1px solid var(--line);border-radius:14px;overflow:hidden;aspect-ratio:1/1;max-height:82vh;width:100%;touch-action:none}
-#view{width:100%;height:100%;display:block;cursor:grab}
-.hud{position:absolute;left:12px;bottom:10px;right:12px;font-size:13px;color:var(--muted);pointer-events:none}
-.hud b{color:var(--ink)}
-.caption{position:absolute;left:12px;top:10px;right:12px;font-size:14px;pointer-events:none;color:var(--ink);text-shadow:0 0 6px var(--field)}
-aside{display:flex;flex-direction:column;gap:12px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
-.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:0 0 8px;font-weight:600}
-.row{display:grid;grid-template-columns:118px 1fr 64px;align-items:center;gap:8px;margin:5px 0;font-size:13px}
-.row output{text-align:right;font-variant-numeric:tabular-nums}
-input[type=range]{width:100%;accent-color:var(--accent)}
-.presets{display:flex;flex-wrap:wrap;gap:6px}
-button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:5px 10px;border-radius:999px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.toggles{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13px}
-.stats div span{display:block;color:var(--muted);font-size:12px}
-.stats div b{font-size:17px;font-variant-numeric:tabular-nums}
-#polar{width:100%;max-width:300px;aspect-ratio:1/1;display:block;margin:0 auto}
-.small{font-size:12px;color:var(--muted);margin:6px 0 0}
-.notes{max-width:1280px;margin:0 auto;padding:4px 20px 40px}
-.notes details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-top:10px}
-.notes summary{cursor:pointer;font-weight:600}
-.notes table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
-.notes td,.notes th{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
-.eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:var(--bg);padding:6px 10px;border-radius:8px;display:block;margin:6px 0;overflow-x:auto;white-space:pre}
-.est{color:var(--accent);font-weight:700}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.4 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;overflow:hidden}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.title{position:fixed;left:24px;top:20px;margin:0;font-weight:400;font-size:17px;letter-spacing:.06em;pointer-events:none}
+.title i{color:var(--muted);font-style:italic;margin-right:.5em}
+.picks{position:fixed;left:0;right:0;bottom:22px;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.row{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;pointer-events:auto}
+.row button{font:inherit;font-size:15px;background:none;border:0;padding:4px 2px;color:var(--muted);cursor:pointer;border-bottom:1px solid transparent}
+.row button:hover{color:var(--ink)}
+.row button.on{color:var(--on);border-bottom-color:var(--on)}
+.row.small button{font-size:13px;font-style:italic}
+.hint{position:fixed;right:24px;top:22px;margin:0;font-size:13px;font-style:italic;color:var(--muted);pointer-events:none;text-align:right}
+@media (max-width:600px){ .hint{top:46px;left:24px;right:auto;text-align:left} }
 </style>
 </head>
 <body>
-<header>
-  <h1><span id="pieceNo">NN</span> Into the Wind</h1>
-  <p class="sub">Animals turn their heads into the wind. Fur grows nose-to-tail, so wind from the front combs it flat, and wind from behind gets under it and throws it into the face.</p>
-</header>
-
-<main class="layout">
-  <section class="stage" id="stage">
-    <canvas id="view" aria-label="Top view of a furry animal head in wind. Drag outside the head to move the wind, drag the head to turn it."></canvas>
-    <div class="caption" id="caption"></div>
-    <div class="hud" id="hud"></div>
-  </section>
-
-  <aside>
-    <div class="card">
-      <h2>How it feels</h2>
-      <div class="stats">
-        <div><span>Wind from</span><b id="sRel">–</b></div>
-        <div><span>Ruffled hairs</span><b id="sRuff">–</b></div>
-        <div><span>Hairs across the eyes</span><b id="sEye">–</b></div>
-        <div><span>Mean hair angle off skin</span><b id="sLift">–</b></div>
-      </div>
-      <canvas id="polar" width="300" height="300" aria-label="Ruffled fraction against wind direction relative to the nose"></canvas>
-      <p class="small">Polar plot: share of ruffled hairs at steady state for every wind direction, nose at the top. The dot is now. Recomputed when you change the wind speed or the coat.</p>
-    </div>
-
-    <div class="card">
-      <h2>Wind</h2>
-      <div class="row"><label for="U">Speed</label><input id="U" type="range" min="0" max="25" step="0.5" value="9"><output id="oU"></output></div>
-      <div class="row"><label for="from">From (world)</label><input id="from" type="range" min="0" max="359" step="1" value="270"><output id="ofrom"></output></div>
-      <div class="row"><label for="TI">Turbulence</label><input id="TI" type="range" min="0" max="0.4" step="0.01" value="0.15"><output id="oTI"></output></div>
-      <div class="row"><label for="ts">Time</label><input id="ts" type="range" min="0.05" max="1" step="0.05" value="1"><output id="ots"></output></div>
-      <div class="toggles">
-        <button id="bTurn">Let it turn on its own</button>
-        <button id="bHeat">Colour by disturbance</button>
-        <button id="bFlow" class="on">Show airflow</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Coat</h2>
-      <div class="presets" id="presets"></div>
-      <div class="row"><label for="L">Guard hair length</label><input id="L" type="range" min="5" max="150" step="1" value="35"><output id="oL"></output></div>
-      <div class="row"><label for="d">Hair diameter</label><input id="d" type="range" min="20" max="160" step="1" value="75"><output id="od"></output></div>
-      <div class="row"><label for="E">Keratin modulus</label><input id="E" type="range" min="1" max="7" step="0.1" value="3.5"><output id="oE"></output></div>
-      <div class="row"><label for="th0">Lie angle</label><input id="th0" type="range" min="5" max="45" step="1" value="15"><output id="oth0"></output></div>
-      <div class="row"><label for="a">Coat shelter</label><input id="a" type="range" min="0" max="4" step="0.1" value="2.5"><output id="oa"></output></div>
-      <p class="small">Drag outside the head to swing the wind. Drag on the head to turn it. Arrow keys turn the head; Shift + arrows move the wind.</p>
-    </div>
-  </aside>
-</main>
-
-<section class="notes">
-  <details open>
-    <summary>What you are seeing</summary>
-    <p>A head seen from above, about 1600 guard hairs rooted on its skin. Each hair is a small elastic rod that leans back toward the tail at the lie angle. Air flows around the head, slows down inside the coat, and pushes on each hair with ordinary cylinder drag. Nothing is scripted: the fur state comes from the force balance on every hair, about 240 times per simulated second.</p>
-    <p>Wind from the front runs along the grain. The drag on a backward-leaning hair then points into the skin, so the coat is pressed flat and stays inside its own sheltered layer. Wind from behind runs against the grain. The same drag now points out of the skin, lifts the hair tip into faster air, which lifts it further. This is a runaway: past a threshold the hair flips over and points forward, and the long crown and cheek hairs land across the eyes. The face itself sits in the separated wake, where it gets buffeted rather than combed.</p>
-    <p>With <b>Let it turn on its own</b>, the animal knows nothing about the wind direction. It only feels how disturbed its fur is. It keeps turning while that feeling gets better and reverses when it gets worse, a run-and-tumble search. It ends up nose into the wind because that is where the disturbance is lowest. That behaviour rule is an illustration, not a model of any animal's nervous system.</p>
-  </details>
-
-  <details>
-    <summary>Forces and equations</summary>
-    <p><b>1. Air at the skin.</b> The head is treated as a sphere for the outer flow. Potential flow over a sphere gives the slip velocity on the surface, with <i>n</i> the outward skin normal and <i>U</i> the free-stream wind:</p>
-    <span class="eq">u_s = 1.5 · (U − (U·n) n)              attached, β &lt; β_sep
-u_s = −0.2 · (U − (U·n) n)             separated wake, β &gt; β_sep (reverse flow, weak)
-β = angle between n and the upstream direction; blended over ±12° around β_sep</span>
-    <p>Turbulence is added as a moving, spatially smooth random field of intensity TI in attached flow and 0.4 in the wake, with eddies about 6 cm across, advected with the wind, plus slow gusts of 0.6·TI on the free stream.</p>
-    <p><b>2. Shelter inside the coat.</b> Inside the fur layer, speed decays exponentially with depth, the usual form for flow inside a plant or fur canopy. The coat top is the height of a hair lying at its rest angle.</p>
-    <span class="eq">u(z) = u_s · exp(−a · (1 − z/h_c))   for z &lt; h_c,   u(z) = u_s above
-h_c = L · sin θ0,   z = 0.7 · L · (h·n)   (height of the hair's load centre)</span>
-    <p><b>3. Drag on one hair.</b> Only the part of the relative wind normal to the hair pushes on it (cross-flow on a cylinder):</p>
-    <span class="eq">w = u(z) − 0.7 · v_tip            relative air velocity at the load centre
-w_n = w − (w·h) h
-f = ½ · ρ · C_D · d · |w_n| · w_n     force per unit length
-C_D = 1 + 10 · Re^(−2/3),  Re = |w_n| · d / ν      (White's cylinder fit, 1 &lt; Re &lt; 2·10⁵)
-F_tip = f · L / 2                    tip force with the same root moment as the uniform load</span>
-    <p><b>4. Hair stiffness.</b> Each hair is a rigid rod on a root spring, sized so that it has the same root moment and tip deflection as a clamped cantilever under a uniform load:</p>
-    <span class="eq">I = π d⁴ / 64,   k_θ = 4 E I / L,   k_tip = k_θ / L²
-F_spring = k_tip · L · α · ê        α = angle from rest direction, ê points back to rest
-m_eff = ρ_k · (π d²/4) · L / 3     (rod pivoting about its root)
-damping: internal ζ = 0.05 plus the aerodynamic damping already in w</span>
-    <p><b>5. Contact.</b> A hair cannot go below θ_min = 4° off the skin (it lies on the undercoat). The tip is integrated with a linearised backward Euler step, which is stable for the stiff, millisecond-scale short hairs on the snout:</p>
-    <span class="eq">v' = (m v + Δt (F_spring + F_wind)) / (m + Δt (0.7 C + c_int) + Δt² k_tip)</span>
-    <p><b>Ruffled</b> means a hair is more than 40° away from its rest direction. <b>Across the eyes</b> means a hair segment passes within one eye radius of an eye centre while pointing forward.</p>
-  </details>
-
-  <details>
-    <summary>Constants, and which ones are estimates</summary>
-    <p><span class="est">★</span> marks a value I estimated or picked from a plausible range rather than measured for this animal.</p>
-    <table>
-      <tr><th>Quantity</th><th>Value</th><th>Note</th></tr>
-      <tr><td>Air density ρ</td><td>1.20 kg/m³</td><td>20 °C, sea level</td></tr>
-      <tr><td>Air kinematic viscosity ν</td><td>1.5·10⁻⁵ m²/s</td><td>20 °C</td></tr>
-      <tr><td>Keratin density ρ_k</td><td>1300 kg/m³</td><td>typical hair keratin</td></tr>
-      <tr><td>Keratin Young's modulus E</td><td>3.5 GPa default</td><td><span class="est">★</span> hair measures 2 to 5 GPa depending on humidity and species</td></tr>
-      <tr><td>Guard hair diameter d</td><td>by preset</td><td><span class="est">★</span> one effective diameter; real guard hairs taper, so the tip is softer than modelled</td></tr>
-      <tr><td>Guard hair length L</td><td>by preset</td><td><span class="est">★</span> crown and cheeks; the forehead tapers to 55%, the snout uses 32%, hairs in front of the eyes are shortened so they clear the eye at rest</td></tr>
-      <tr><td>Lie angle θ0</td><td>15° default</td><td><span class="est">★</span> sleek coats 8 to 15°, stand-off coats like a husky 20 to 30°</td></tr>
-      <tr><td>Canopy attenuation a</td><td>2.5</td><td><span class="est">★</span> plant canopies measure 1 to 4; no direct measurement for fur found</td></tr>
-      <tr><td>Surface speed-up 1.5</td><td>exact for a sphere</td><td><span class="est">★</span> a real head is not a sphere, and the snout uses the same rule on its own curvature</td></tr>
-      <tr><td>Separation angle β_sep</td><td>105°</td><td><span class="est">★</span> smooth sphere about 82° (laminar) to 120° (turbulent); a furry surface is rough, so I took the middle</td></tr>
-      <tr><td>Wake reverse flow</td><td>0.2 · U, turbulence 0.4</td><td><span class="est">★</span> order of magnitude from sphere wake measurements</td></tr>
-      <tr><td>Free-stream turbulence TI</td><td>0.15 default</td><td><span class="est">★</span> outdoor air near the ground is typically 0.1 to 0.3</td></tr>
-      <tr><td>Eddy size</td><td>6 cm</td><td><span class="est">★</span> about one head width</td></tr>
-      <tr><td>Internal damping ζ</td><td>0.05</td><td><span class="est">★</span></td></tr>
-      <tr><td>Load centre 0.7 L</td><td>–</td><td><span class="est">★</span> where the wind speed is sampled along the hair</td></tr>
-      <tr><td>Ruffled threshold</td><td>40°</td><td>definition, not physics</td></tr>
-    </table>
-    <p>Sanity numbers, red fox defaults (L = 35 mm, d = 75 µm): the root stiffness is k_θ ≈ 6·10⁻⁷ N·m/rad and a crown hair's natural frequency is about 14 Hz. With 9 m/s from behind, the drag on a resting hair already lifts it about 20° by hand calculation, which exposes it to faster air, and it flips. With the same wind from the front the drag points into the skin.</p>
-    <p>Steady-state ruffled share from this model, wind dead ahead / straight behind:</p>
-    <table>
-      <tr><th>Coat</th><th>3 m/s</th><th>5 m/s</th><th>10 m/s</th><th>20 m/s</th></tr>
-      <tr><td>House cat</td><td>0% / 1%</td><td>0% / 34%</td><td>0% / 47%</td><td>0% / 51%</td></tr>
-      <tr><td>Red fox</td><td>0% / 39%</td><td>0% / 46%</td><td>0% / 50%</td><td>11% / 59%</td></tr>
-      <tr><td>Husky</td><td>0% / 42%</td><td>0% / 48%</td><td>0% / 52%</td><td>17% / 60%</td></tr>
-      <tr><td>Bison</td><td>0% / 50%</td><td>0% / 57%</td><td>19% / 62%</td><td>22% / 65%</td></tr>
-      <tr><td>Long-haired dog</td><td>0% / 62%</td><td>16% / 64%</td><td>22% / 66%</td><td>23% / 66%</td></tr>
-    </table>
-    <p>Two things fall out. Short, fine coats tolerate a light tailwind: the cat's coat only starts to flip at about 4 m/s, the fox's at about 2 to 3 m/s. And very long coats get tousled even facing the wind, because the back of the head sits in the reverse flow of the wake; facing the wind is still far better, but not perfect.</p>
-  </details>
-
-  <details>
-    <summary>What this leaves out</summary>
-    <ul>
-      <li>The body and neck. A real animal's body sits behind the head and shelters it from a tailwind, and ears catch wind on their own.</li>
-      <li>Hair-to-hair friction and the way neighbouring hairs hold each other down. The shelter term stands in for this.</li>
-      <li>Bending along the hair. Each hair is a rigid rod on a spring. It is drawn curved from its root for looks, and its curve is not computed.</li>
-      <li>Rain, cold and eyes. Fur is only one reason to face the wind. Horses and cattle often stand rump-to-wind in cold rain, which protects the face and eyes and puts the thickest coat to the weather. Bison and many birds face into storms; for birds the grain argument is the same, with feathers instead of hair.</li>
-    </ul>
-  </details>
-</section>
+<canvas id="view" aria-label="A furry animal lying on a rug. Drag anywhere to move the wind, stroke the animal to pet it."></canvas>
+<h1 class="title"><i>05</i>Into the Wind</h1>
+<p class="hint">drag around it to blow · stroke the fur to pet</p>
+<div class="picks">
+  <div class="row" id="animals"></div>
+  <div class="row small" id="winds"></div>
+</div>
 
 <script>
 'use strict';
-// ---------- constants (SI) ----------
+// ---------- air and hair (SI units) ----------
 const RHO = 1.20, NU = 1.5e-5, RHO_K = 1300, ZETA = 0.05, DEG = Math.PI / 180;
 const K_SURF = 1.5, BETA_SEP = 105 * DEG, BETA_BLEND = 12 * DEG, WAKE_REV = 0.2, WAKE_TI = 0.4;
-const EDDY = 0.06, TH_MIN = 4 * DEG, RUFF_DEG = 40, LOAD_C = 0.7;
+const EDDY = 0.06, TH_MIN = 4 * DEG, LOAD_C = 0.7, SUB = 4;
 
-const PRESETS = {
-  'Red fox':        {R: 0.055, L: 35,  d: 75,  E: 3.5, th0: 15, a: 2.5, coat: '#c4622d', under: '#e8d3b6', tip: '#5a2f1a', ear: '#3b2418'},
-  'House cat':      {R: 0.045, L: 18,  d: 55,  E: 3.5, th0: 12, a: 2.5, coat: '#8b8580', under: '#d9d3cc', tip: '#3d3936', ear: '#5c5550'},
-  'Husky':          {R: 0.070, L: 45,  d: 90,  E: 3.5, th0: 25, a: 2.2, coat: '#6e737a', under: '#f1efe9', tip: '#2e3035', ear: '#3b3e44'},
-  'Bison':          {R: 0.140, L: 110, d: 110, E: 3.5, th0: 18, a: 2.8, coat: '#5a3d26', under: '#8a6a4c', tip: '#2a1b10', ear: '#2a1b10'},
-  'Long-haired dog':{R: 0.070, L: 120, d: 60,  E: 3.0, th0: 10, a: 2.0, coat: '#d7b98a', under: '#f3e7d2', tip: '#a8875a', ear: '#b08d5e'},
-};
-
-const S = {
-  U: 9, from: 270 * DEG, TI: 0.15, ts: 1,
-  heading: 270 * DEG + 160 * DEG,   // start with the wind mostly from behind
-  omega: 0, auto: false, heat: false, flow: true,
-  preset: 'Red fox', R: 0.055, L: 0.035, d: 75e-6, E: 3.5e9, th0: 15 * DEG, a: 2.5,
-  colors: PRESETS['Red fox'], t: 0,
-};
-
-// ---------- small vector helpers ----------
 const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
 const norm = a => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0]/l, a[1]/l, a[2]/l]; };
 const clamp = (x, a, b) => x < a ? a : x > b ? b : x;
 const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t*t*(3 - 2*t); };
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
 function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hex(h){ const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function mix(a, b, t){ return [a[0] + (b[0]-a[0])*t, a[1] + (b[1]-a[1])*t, a[2] + (b[2]-a[2])*t]; }
+const rgb = (c, al = 1) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${al})`;
 
-// ---------- head geometry (head frame: x to nose, y to the animal's left, z up; units of R) ----------
-const SKULL = {c: [0, 0, 0], a: [1.12, 1.0, 0.82]};
-const SNOUT = {c: [1.05, 0, -0.18], a: [0.62, 0.42, 0.36]};
-const NOSE = [1.72, 0, -0.12];
-const EYES = [[0.64, 0.40, 0], [0.64, -0.40, 0]];
-const EYE_R = 0.09, EYE_ZONE = 1.6 * EYE_R; // a forward hair this close to the eye centre is in the eye
-for (const e of EYES){ const q = (e[0]/SKULL.a[0])**2 + (e[1]/SKULL.a[1])**2; e[2] = SKULL.a[2]*Math.sqrt(Math.max(0, 1 - q)); }
-const inside = (p, E) => ((p[0]-E.c[0])/E.a[0])**2 + ((p[1]-E.c[1])/E.a[1])**2 + ((p[2]-E.c[2])/E.a[2])**2 < 1;
+// ---------- the animals (geometry in units of head radius R) ----------
+const ANIMALS = {
+  'fox': {
+    R: 0.055, L: 0.035, d: 75e-6, E: 3.5e9, th0: 15, a: 2.5, curl: 0.05,
+    pal: ['#c8622a', '#f6ece0', '#2a1c15', '#de8648'], under: '#8a4a2a',
+    skull: [1.05, 0.95, 0.8], snout: {c: [1.05, 0, -0.2], a: [0.8, 0.36, 0.32]},
+    eye: {x: 0.6, y: 0.4, r: 0.13, iris: '#d6962c', slit: false},
+    body: [1.9, 1.2, 0.8], bodyLen: 0.95,
+    tail: {B: [-1.6, 0.25], ang: 150, a: [1.45, 0.5, 0.45], len: 1.7},
+    ears: 'fox', nose: '#1c1411', whiskers: true,
+    region(part, p, n, along){
+      if (part === 'snout') return (p[2] < -0.12 || Math.abs(p[1]) > 0.24) ? 1 : 0;
+      if (part === 'skull') return (Math.abs(p[1]) > 0.62 && p[0] > 0.05 && p[2] < 0.4) ? 1 : 0;
+      if (part === 'body') return (p[0] > 1.15 && n[2] < 0.55) ? 1 : 0;
+      if (part === 'tail') return along > 0.66 ? 1 : 0;
+      return 0;
+    },
+  },
+  'cat': {
+    R: 0.045, L: 0.02, d: 55e-6, E: 3.5e9, th0: 12, a: 2.5, curl: 0.02,
+    pal: ['#8e8780', '#e2dcd4', '#4b4542', '#b2aaa2'], under: '#5f5853',
+    skull: [1.0, 1.0, 0.86], snout: {c: [0.82, 0, -0.16], a: [0.44, 0.42, 0.3]},
+    eye: {x: 0.6, y: 0.44, r: 0.18, iris: '#8fbf55', slit: true},
+    body: [1.8, 1.15, 0.8], bodyLen: 1.0,
+    tail: {B: [-1.55, 0.35], ang: 125, a: [1.55, 0.2, 0.18], len: 0.9},
+    ears: 'cat', nose: '#d98f95', whiskers: true,
+    region(part, p, n, along){
+      if (part === 'snout') return (p[2] < -0.05 || Math.abs(p[1]) > 0.2) ? 1 : 3;
+      if (part === 'skull'){
+        if (p[0] > 0.05 && p[0] < 0.8 && Math.abs(p[1]) < 0.45 && Math.sin(p[1] * 19) > 0.3) return 2;
+        if (Math.abs(p[1]) > 0.6 && Math.sin(p[0] * 9 + p[2] * 5) > 0.55) return 2;
+        return 0;
+      }
+      if (part === 'body'){ if (n[2] < 0.05) return 1; return Math.sin(p[0] * 5.5 + 0.9 * Math.abs(p[1])) > 0.42 ? 2 : 0; }
+      if (part === 'tail') return Math.sin(along * 24) > 0.25 ? 2 : 0;
+      return 0;
+    },
+  },
+  'husky': {
+    R: 0.07, L: 0.045, d: 90e-6, E: 3.5e9, th0: 25, a: 2.2, curl: 0.04,
+    pal: ['#5f656d', '#f6f4f0', '#2d3035', '#8c929a'], under: '#3c4046',
+    skull: [1.05, 1.0, 0.82], snout: {c: [1.0, 0, -0.18], a: [0.7, 0.42, 0.36]},
+    eye: {x: 0.6, y: 0.42, r: 0.13, iris: '#7fb6e8', slit: false},
+    body: [2.0, 1.3, 0.9], bodyLen: 1.0,
+    tail: {B: [-1.7, 0.35], ang: 115, a: [1.15, 0.46, 0.42], len: 1.5},
+    ears: 'husky', nose: '#1d1d20', whiskers: false,
+    region(part, p, n, along){
+      if (part === 'snout') return 1;
+      if (part === 'skull'){
+        if (p[0] > 0.3 && Math.abs(p[1]) < 0.16) return 0;
+        if (p[0] > 0.32 || Math.abs(p[1]) > 0.62 || p[2] < 0.25) return 1;
+        return 0;
+      }
+      if (part === 'body') return (n[2] < 0.35 || p[0] > 1.35) ? 1 : 0;
+      if (part === 'tail') return along > 0.75 ? 2 : (n[2] < 0.1 ? 1 : 0);
+      return 0;
+    },
+  },
+  'bison': {
+    R: 0.13, L: 0.09, d: 110e-6, E: 3.5e9, th0: 18, a: 2.8, curl: 0.22,
+    pal: ['#4c301d', '#7a5536', '#2a1a10', '#93673f'], under: '#24160d',
+    skull: [1.05, 1.08, 0.86], snout: {c: [0.95, 0, -0.25], a: [0.62, 0.6, 0.42]},
+    eye: {x: 0.52, y: 0.62, r: 0.1, iris: '#3b2414', slit: false},
+    body: [2.15, 1.5, 1.1], bodyLen: 0.8,
+    tail: {B: [-2.05, 0], ang: 185, a: [0.65, 0.12, 0.1], len: 0.7},
+    ears: 'bison', nose: '#1a1310', whiskers: false,
+    region(part, p, n, along){
+      if (part === 'snout') return 2;
+      if (part === 'skull') return (p[0] < 0.55 && p[2] > 0.35) ? 3 : 2;
+      if (part === 'body') return p[0] > -0.1 ? 1 : 0;
+      if (part === 'tail') return 2;
+      return 0;
+    },
+  },
+  'dog': {
+    R: 0.07, L: 0.07, d: 60e-6, E: 3.0e9, th0: 12, a: 2.0, curl: 0.12,
+    pal: ['#d6a35a', '#f3dcae', '#a9733a', '#e9c27a'], under: '#9b6a35',
+    skull: [1.0, 0.95, 0.82], snout: {c: [1.0, 0, -0.2], a: [0.68, 0.4, 0.34]},
+    eye: {x: 0.6, y: 0.4, r: 0.14, iris: '#5a3517', slit: false},
+    body: [1.95, 1.25, 0.85], bodyLen: 1.0,
+    tail: {B: [-1.7, 0.1], ang: 160, a: [1.2, 0.3, 0.26], len: 1.6},
+    ears: 'flop', nose: '#231a16', whiskers: false,
+    region(part, p, n, along){
+      if (part === 'snout') return p[2] < -0.05 ? 1 : 0;
+      if (part === 'ear') return 2;
+      if (part === 'body') return (p[0] > 1.2 && n[2] < 0.6) ? 1 : 0;
+      if (part === 'tail') return n[2] < 0.2 ? 1 : 3;
+      return 0;
+    },
+  },
+};
+const NAMES = {fox: 'Fox', cat: 'Cat', husky: 'Husky', bison: 'Bison', dog: 'Shaggy dog'};
+const WINDS = [['calm', 0], ['breeze', 4], ['windy', 9], ['gale', 16]];
 
-let hairs = [];
-function segDist(p, dir, len, q){ // distance from q to segment p + s*dir, s in [0,len]
+// ---------- state ----------
+const S = {
+  key: 'fox', A: null, U: 9, Uset: 9, gust: 0, t: 0,
+  windFrom: 200 * DEG,                 // unwrapped; where the wind comes from
+  head: 200 * DEG - 150 * DEG, headV: 0,   // world heading of the nose
+  body: 200 * DEG - 150 * DEG, bodyV: 0,
+  happy: 0, blink: 0, nextBlink: 2, flick: [0, 0], nextFlick: 3, sneeze: 0,
+};
+const hist = [];   // wind direction history for the reaction delay
+
+// ---------- building the coat ----------
+let hairs = [], parts = [];
+function sampleEllipsoid(spec, count, rand, accept, out){
+  const cr = Math.cos(spec.rot || 0), sr = Math.sin(spec.rot || 0);
+  let made = 0, guard = 0;
+  while (made < count && guard++ < count * 40){
+    const u = norm([rand()*2-1, rand()*2-1, rand()*2-1]);
+    const q = [spec.a[0]*u[0], spec.a[1]*u[1], spec.a[2]*u[2]];
+    const p = [spec.c[0] + q[0]*cr - q[1]*sr, spec.c[1] + q[0]*sr + q[1]*cr, spec.c[2] + q[2]];
+    const nl = norm([u[0]/spec.a[0], u[1]/spec.a[1], u[2]/spec.a[2]]);
+    const n = [nl[0]*cr - nl[1]*sr, nl[0]*sr + nl[1]*cr, nl[2]];
+    if (n[2] < -0.25) continue;
+    const along = u[0];   // -1..1 along the ellipsoid's own x axis
+    if (!accept(p, n, along)) continue;
+    out(p, n, along); made++;
+  }
+}
+const insideE = (p, E) => {
+  const cr = Math.cos(-(E.rot || 0)), sr = Math.sin(-(E.rot || 0));
+  const x = p[0]-E.c[0], y = p[1]-E.c[1];
+  const lx = x*cr - y*sr, ly = x*sr + y*cr;
+  return (lx/E.a[0])**2 + (ly/E.a[1])**2 + ((p[2]-E.c[2])/E.a[2])**2 < 1;
+};
+function segDist(p, dir, len, q){
   const w = [q[0]-p[0], q[1]-p[1], q[2]-p[2]]; const s = clamp(dot(w, dir), 0, len);
   return Math.hypot(w[0]-s*dir[0], w[1]-s*dir[1], w[2]-s*dir[2]);
 }
 
-function buildHairs(){
-  const rand = rng(7); hairs = [];
-  const make = (E, count, isSnout) => {
-    let made = 0, guard = 0;
-    while (made < count && guard++ < count * 40){
-      const u = norm([rand()*2-1, rand()*2-1, rand()*2-1]);
-      const p = [E.c[0] + E.a[0]*u[0], E.c[1] + E.a[1]*u[1], E.c[2] + E.a[2]*u[2]];
-      const n = norm([u[0]/E.a[0], u[1]/E.a[1], u[2]/E.a[2]]);
-      if (n[2] < -0.2) continue;
-      if (!isSnout && inside(p, SNOUT)) continue;
-      if (isSnout && inside(p, SKULL)) continue;
-      if (Math.hypot(p[0]-NOSE[0], p[1]-NOSE[1]) < 0.16) continue;
-      if (EYES.some(e => Math.hypot(p[0]-e[0], p[1]-e[1], p[2]-e[2]) < EYE_R * 1.15)) continue;
-      // grain: away from the nose, in the skin plane
-      const g = [p[0]-NOSE[0], p[1]-NOSE[1], p[2]-NOSE[2]];
-      const gn = dot(g, n); const t = norm([g[0]-gn*n[0], g[1]-gn*n[1], g[2]-gn*n[2]]);
-      let f = isSnout ? 0.32 : 1 - 0.45 * smooth(0.1, 0.9, p[0]);
-      f *= 0.88 + 0.24 * rand();
-      hairs.push({p, n, t, f, isSnout, seed: rand() * 1000});
-      made++;
-    }
+function buildAnimal(key){
+  const A = ANIMALS[key]; S.A = A; S.key = key;
+  const rand = rng(17); hairs = [];
+  const SK = {c: [0, 0, 0], a: A.skull}, SN = A.snout;
+  A.NOSE = [SN.c[0] + SN.a[0]*0.98, 0, SN.c[2] + 0.1];
+  A.EYES = [[A.eye.x, A.eye.y, 0], [A.eye.x, -A.eye.y, 0]];
+  for (const e of A.EYES){ const q = (e[0]/A.skull[0])**2 + (e[1]/A.skull[1])**2; e[2] = A.skull[2]*Math.sqrt(Math.max(0, 1 - q)); }
+  const BODY = {c: [0, 0, 0], a: A.body};
+  const tl = A.tail, ta = tl.ang * DEG;
+  const TAIL = {c: [tl.B[0] + Math.cos(ta)*tl.a[0]*0.85, tl.B[1] + Math.sin(ta)*tl.a[0]*0.85, 0.05], a: tl.a, rot: ta};
+  A.TAIL = TAIL; A.BODY = BODY; A.SK = SK;
+  A.EARS = A.ears === 'flop' ? [
+    {c: [-0.05, 0.92, -0.05], a: [0.62, 0.3, 0.2], rot: 0.35},
+    {c: [-0.05, -0.92, -0.05], a: [0.62, 0.3, 0.2], rot: -0.35}] : [];
+  // part 0: body + tail, part 1: head
+  parts = [{name: 'body'}, {name: 'head'}];
+  const add = (part, name, p, n, along, f, grain) => {
+    const gn = dot(grain, n);
+    const t = norm([grain[0]-gn*n[0], grain[1]-gn*n[1], grain[2]-gn*n[2]]);
+    hairs.push({part, name, p, n, t, along, f: f * (0.85 + 0.3*rand()), seed: rand(),
+      col: A.region(name, p, n, (along + 1) / 2)});
   };
-  make(SKULL, 1300, false); make(SNOUT, 340, true);
-  hairs.sort((A, B) => A.p[2] - B.p[2]);
-  configureHairs();
+  const eyeClear = p => !A.EYES.some(e => Math.hypot(p[0]-e[0], p[1]-e[1], p[2]-e[2]) < A.eye.r * 1.2);
+  sampleEllipsoid(SK, 1500, rand, p => !insideE(p, SN) && eyeClear(p) && Math.hypot(p[0]-A.NOSE[0], p[1]) > 0.15,
+    (p, n, al) => add(1, 'skull', p, n, al, 1 - 0.45 * smooth(0.1, 0.9, p[0]), [p[0]-A.NOSE[0], p[1], p[2]-A.NOSE[2]]));
+  sampleEllipsoid(SN, 380, rand, p => !insideE(p, SK) && Math.hypot(p[0]-A.NOSE[0], p[1]) > 0.14,
+    (p, n, al) => add(1, 'snout', p, n, al, 0.3, [p[0]-A.NOSE[0], p[1], p[2]-A.NOSE[2]]));
+  for (const E of A.EARS){
+    const sg = Math.sign(E.c[1]);
+    sampleEllipsoid(E, 260, rand, () => true, (p, n, al) => add(1, 'ear', p, n, al, 1.15, [-0.35, sg, -0.4]));
+  }
+  sampleEllipsoid(BODY, 2600, rand, () => true, (p, n, al) => add(0, 'body', p, n, al,
+    A.bodyLen * (1 + 0.3 * smooth(1.0, 1.7, p[0])), [-1, 0.25 * p[1], 0]));
+  sampleEllipsoid(TAIL, key === 'cat' || key === 'bison' ? 320 : 700, rand, p => !insideE(p, BODY),
+    (p, n, al) => add(0, 'tail', p, n, al, tl.len, [Math.cos(ta), Math.sin(ta), 0]));
+  hairs.sort((a, b) => a.part - b.part || a.p[2] - b.p[2]);
+  configure();
+  buildColors();
 }
 
-// physical properties depend on the coat sliders
-function configureHairs(){
-  const R = S.R, d = S.d, A = Math.PI * d * d / 4, I = Math.PI * d**4 / 64;
-  const c0 = Math.cos(S.th0), s0 = Math.sin(S.th0);
+function configure(){
+  const A = S.A, R = A.R, d = A.d, Ar = Math.PI * d * d / 4, I = Math.PI * d**4 / 64;
+  const th0 = A.th0 * DEG, c0 = Math.cos(th0), s0 = Math.sin(th0);
   for (const h of hairs){
-    h.h0 = norm([h.t[0]*c0 + h.n[0]*s0, h.t[1]*c0 + h.n[1]*s0, h.t[2]*c0 + h.n[2]*s0]);
-    let L = S.L * h.f;
-    // hairs that would lie across an eye at rest are shortened (the bare eye ring)
-    for (let k = 0; k < 30; k++){
-      const hit = EYES.some(e => segDist(h.p, h.h0, L / R, e) < EYE_R * 1.25);
-      if (!hit) break; L *= 0.85;
+    const th = h.name === 'ear' ? th0 * 0.6 : th0;
+    h.h0 = norm([h.t[0]*Math.cos(th) + h.n[0]*Math.sin(th), h.t[1]*Math.cos(th) + h.n[1]*Math.sin(th), h.t[2]*Math.cos(th) + h.n[2]*Math.sin(th)]);
+    let L = A.L * h.f;
+    if (h.part === 1) for (let k = 0; k < 30; k++){
+      if (!A.EYES.some(e => segDist(h.p, h.h0, L / R, e) < A.eye.r * 1.35)) break; L *= 0.85;
     }
-    h.L = L; h.m = RHO_K * A * L / 3; h.k = 4 * S.E * I / L**3;
+    h.L = L; h.m = RHO_K * Ar * L / 3; h.k = 4 * A.E * I / L**3;
     h.cint = 2 * ZETA * Math.sqrt(h.k * h.m); h.hc = L * s0;
-    h.r = [h.h0[0]*L, h.h0[1]*L, h.h0[2]*L]; h.v = [0, 0, 0];
-    h.u = [0, 0, 0]; h.ti = 0;
+    h.r = [h.h0[0]*L, h.h0[1]*L, h.h0[2]*L]; h.v = [0, 0, 0]; h.u = [0, 0, 0];
+    h.pw = 0; h.pd = [0, 0, 0];
   }
 }
 
-// ---------- air ----------
-function windHead(){ // free-stream vector in the head frame (wind blows toward -from)
-  const ux = -Math.cos(S.from), uy = -Math.sin(S.from), c = Math.cos(S.heading), s = Math.sin(S.heading);
-  return [ux*c + uy*s, -ux*s + uy*c, 0];
-}
+// ---------- air around each part ----------
 function surfaceFlow(h, U, out){
   const Um = Math.hypot(U[0], U[1]);
   if (Um < 1e-9){ out[0] = out[1] = out[2] = 0; return 0; }
@@ -294,50 +251,51 @@ function surfaceFlow(h, U, out){
   out[0] = k*ut[0]; out[1] = k*ut[1]; out[2] = k*ut[2];
   return b;
 }
-// smooth advected noise, roughly unit variance per component
 const WAVES = (() => { const r = rng(11), w = []; for (let c = 0; c < 3; c++) for (let i = 0; i < 3; i++){ const ang = r()*Math.PI*2, k = (2*Math.PI/EDDY)*(0.6 + 0.8*r()); w.push([c, k*Math.cos(ang), k*Math.sin(ang), r()*6.28, 2 + 6*r()]); } return w; })();
-function turb(px, py, t, Uw, out){
-  out[0] = out[1] = out[2] = 0;
+const turbOut = [0, 0, 0];
+function turb(px, py, t, Uw){
+  turbOut[0] = turbOut[1] = turbOut[2] = 0;
   const qx = px - Uw[0]*t, qy = py - Uw[1]*t;
-  for (const [c, kx, ky, ph, om] of WAVES) out[c] += Math.sin(kx*qx + ky*qy + ph + om*t);
-  out[0] *= 0.8165; out[1] *= 0.8165; out[2] *= 0.8165 * 0.6; // vertical eddies weaker near a surface (estimate)
+  for (const [c, kx, ky, ph, om] of WAVES) turbOut[c] += Math.sin(kx*qx + ky*qy + ph + om*t);
+  turbOut[0] *= 0.8165; turbOut[1] *= 0.8165; turbOut[2] *= 0.49;
 }
 
-// ---------- one hair, one step ----------
-const tmpW = [0, 0, 0];
 function stepHair(h, ux, uy, uz, dt){
-  const L = h.L, r = h.r, v = h.v;
+  const L = h.L, r = h.r, v = h.v, A = S.A;
   const hx = r[0]/L, hy = r[1]/L, hz = r[2]/L;
   const elev = hx*h.n[0] + hy*h.n[1] + hz*h.n[2];
   const z = LOAD_C * L * elev;
-  const shel = z >= h.hc ? 1 : Math.exp(-S.a * (1 - Math.max(z, 0) / h.hc));
+  const shel = z >= h.hc ? 1 : Math.exp(-A.a * (1 - Math.max(z, 0) / h.hc));
   const sx = shel*ux, sy = shel*uy, sz = shel*uz;
-  // relative wind normal to the hair
   let wx = sx - LOAD_C*v[0], wy = sy - LOAD_C*v[1], wz = sz - LOAD_C*v[2];
   const wh = wx*hx + wy*hy + wz*hz; wx -= wh*hx; wy -= wh*hy; wz -= wh*hz;
   const wn = Math.hypot(wx, wy, wz);
-  const Re = Math.max(wn * S.d / NU, 0.05);
+  const Re = Math.max(wn * A.d / NU, 0.05);
   const Cd = 1 + 10 * Math.pow(Re, -2/3);
-  const C = 0.5 * RHO * Cd * S.d * wn * L / 2;            // tip force per unit relative speed
-  const sh = sx*hx + sy*hy + sz*hz;                       // wind part of the drag, normal to hair
-  const Fwx = C*(sx - sh*hx), Fwy = C*(sy - sh*hy), Fwz = C*(sz - sh*hz);
-  // spring back toward the rest direction
+  const C = 0.5 * RHO * Cd * A.d * wn * L / 2;
+  const sh = sx*hx + sy*hy + sz*hz;
+  let Fx = C*(sx - sh*hx), Fy = C*(sy - sh*hy), Fz = C*(sz - sh*hz);
+  // the coat springs back toward its lie
   const c = clamp(hx*h.h0[0] + hy*h.h0[1] + hz*h.h0[2], -1, 1), alpha = Math.acos(c);
-  let ex = h.h0[0] - c*hx, ey = h.h0[1] - c*hy, ez = h.h0[2] - c*hz;
-  let el = Math.hypot(ex, ey, ez);
+  let ex = h.h0[0] - c*hx, ey = h.h0[1] - c*hy, ez = h.h0[2] - c*hz, el = Math.hypot(ex, ey, ez);
   if (el < 1e-9){ ex = h.n[0]; ey = h.n[1]; ez = h.n[2]; el = 1; }
   const Fs = h.k * L * alpha / el;
-  const den = h.m + dt * (LOAD_C*C + h.cint) + dt*dt*h.k;
-  v[0] = (h.m*v[0] + dt*(Fs*ex + Fwx)) / den;
-  v[1] = (h.m*v[1] + dt*(Fs*ey + Fwy)) / den;
-  v[2] = (h.m*v[2] + dt*(Fs*ez + Fwz)) / den;
+  Fx += Fs*ex; Fy += Fs*ey; Fz += Fs*ez;
+  // a hand stroking the coat
+  let kp = 0;
+  if (h.pw > 0){
+    kp = h.k * 25 * h.pw;
+    const cp = clamp(hx*h.pd[0] + hy*h.pd[1] + hz*h.pd[2], -1, 1), ap = Math.acos(cp);
+    let px = h.pd[0] - cp*hx, py = h.pd[1] - cp*hy, pz = h.pd[2] - cp*hz; const pl = Math.hypot(px, py, pz);
+    if (pl > 1e-9){ const Fp = kp * L * ap / pl; Fx += Fp*px; Fy += Fp*py; Fz += Fp*pz; }
+  }
+  const den = h.m + dt * (LOAD_C*C + h.cint * (1 + 4*h.pw)) + dt*dt*(h.k + kp);
+  v[0] = (h.m*v[0] + dt*Fx) / den; v[1] = (h.m*v[1] + dt*Fy) / den; v[2] = (h.m*v[2] + dt*Fz) / den;
   r[0] += dt*v[0]; r[1] += dt*v[1]; r[2] += dt*v[2];
-  // keep the length, keep the tip above the undercoat
-  let nh = norm(r); let e2 = dot(nh, h.n);
-  const sMin = Math.sin(TH_MIN);
+  let nh = norm(r); const e2 = dot(nh, h.n), sMin = Math.sin(TH_MIN);
   if (e2 < sMin){
-    let tx = nh[0]-e2*h.n[0], ty = nh[1]-e2*h.n[1], tz = nh[2]-e2*h.n[2];
-    const tl = Math.hypot(tx, ty, tz) || 1; const cm = Math.cos(TH_MIN);
+    const tx = nh[0]-e2*h.n[0], ty = nh[1]-e2*h.n[1], tz = nh[2]-e2*h.n[2];
+    const tl = Math.hypot(tx, ty, tz) || 1, cm = Math.cos(TH_MIN);
     nh = [tx/tl*cm + h.n[0]*sMin, ty/tl*cm + h.n[1]*sMin, tz/tl*cm + h.n[2]*sMin];
     const vn = dot(v, h.n); if (vn < 0){ v[0] -= vn*h.n[0]; v[1] -= vn*h.n[1]; v[2] -= vn*h.n[2]; }
   }
@@ -345,363 +303,541 @@ function stepHair(h, ux, uy, uz, dt){
   const vr = dot(v, nh); v[0] -= vr*nh[0]; v[1] -= vr*nh[1]; v[2] -= vr*nh[2];
 }
 
-function hairMetrics(list){
-  let ruff = 0, lift = 0, eye = 0, fwd = 0;
-  const cr = Math.cos(RUFF_DEG * DEG);
-  for (const h of list){
-    const hh = [h.r[0]/h.L, h.r[1]/h.L, h.r[2]/h.L];
-    if (dot(hh, h.h0) < cr) ruff++;
-    lift += Math.asin(clamp(dot(hh, h.n), -1, 1));
-    if (dot(hh, h.t) < 0) fwd++;
-    if (dot(hh, h.t) < 0 && hh[0] > 0){
-      const LR = h.L / S.R;
-      for (const e of EYES) if (segDist(h.p, hh, LR, e) < EYE_ZONE){ eye++; break; }
-    }
-  }
-  return {ruff: ruff / list.length, lift: lift / list.length / DEG, eye, fwd: fwd / list.length};
+// ---------- frames: where the body and head sit in the world ----------
+function frames(){
+  const A = S.A, R = A.R;
+  const breathe = 1 + 0.012 * Math.sin(S.t * 1.7);
+  const cb = Math.cos(S.body), sb = Math.sin(S.body);
+  const jx = (A.body[0] - 0.35) * R, ox = 0.85 * R;
+  const ch = Math.cos(S.head), sh = Math.sin(S.head);
+  parts[0].o = [0, 0]; parts[0].c = cb; parts[0].s = sb; parts[0].sc = breathe;
+  parts[1].o = [jx*cb + ox*ch, jx*sb + ox*sh]; parts[1].c = ch; parts[1].s = sh; parts[1].sc = 1;
 }
 
-// ---------- live simulation ----------
-const turbOut = [0, 0, 0];
-function simulate(dtReal){
-  const dtSim = dtReal * S.ts, N = 6, dt = dtSim / N;
-  S.t += dtSim;
+// ---------- pointer: wind or petting ----------
+const pointer = {down: false, mode: null, x: 0, y: 0, wx: 0, wy: 0, vx: 0, vy: 0, lastT: 0, stroke: 0};
+let hearts = [];
+
+function simulate(dt){
+  const A = S.A, R = A.R, N = SUB, sdt = dt / N;
+  S.t += dt;
   const t = S.t;
-  const gust = 1 + 0.6 * S.TI * (Math.sin(2*Math.PI*0.13*t) + 0.7*Math.sin(2*Math.PI*0.31*t + 1) + 0.5*Math.sin(2*Math.PI*0.71*t + 2)) / 1.3;
-  const Ueff = Math.max(0, S.U * gust);
-  const Uh0 = windHead(), Uh = [Uh0[0]*Ueff, Uh0[1]*Ueff, 0];
-  const Uw = [-Math.cos(S.from)*Ueff, -Math.sin(S.from)*Ueff];
-  const c = Math.cos(S.heading), s = Math.sin(S.heading);
+  S.gust = Math.max(0, S.gust - dt);
+  S.U += (S.Uset - S.U) * Math.min(1, dt / 0.8);
+  const swell = 1 + 0.1 * (Math.sin(2*Math.PI*0.13*t) + 0.7*Math.sin(2*Math.PI*0.31*t + 1)) + 0.9 * smooth(0, 0.4, S.gust) * smooth(1.6, 0.9, 1.6 - S.gust);
+  const Ueff = S.U * swell;
+  const wf = S.windFrom, Uw = [-Math.cos(wf)*Ueff, -Math.sin(wf)*Ueff];
+  frames();
+  const petting = pointer.down && pointer.mode === 'pet';
+  const pr = 0.5 * R, pv = Math.hypot(pointer.vx, pointer.vy);
+  for (const P of parts){ P.U = [Uw[0]*P.c + Uw[1]*P.s, -Uw[0]*P.s + Uw[1]*P.c, 0]; }
   for (const h of hairs){
-    const b = surfaceFlow(h, Uh, h.u);
-    const ti = S.TI * (1 - b) + WAKE_TI * b;
-    const pwx = (h.p[0]*c - h.p[1]*s) * S.R, pwy = (h.p[0]*s + h.p[1]*c) * S.R;
-    turb(pwx, pwy, t, Uw, turbOut);
-    // turbulence in the world frame -> head frame
-    const tx = turbOut[0]*c + turbOut[1]*s, ty = -turbOut[0]*s + turbOut[1]*c, tz = turbOut[2];
-    const amp = ti * Ueff;
-    const ux = h.u[0] + amp*tx, uy = h.u[1] + amp*ty, uz = h.u[2] + amp*tz;
-    for (let i = 0; i < N; i++) stepHair(h, ux, uy, uz, dt);
-  }
-}
-
-// ---------- steady-state sweep for the polar plot ----------
-let sweep = {res: new Array(24).fill(null), eye: new Array(24).fill(0), job: 0};
-function startSweep(){
-  const job = ++sweep.job; sweep.res = new Array(24).fill(null); sweep.eye = new Array(24).fill(0);
-  const sub = hairs.filter((_, i) => i % 4 === 0).map(h => ({...h, r: [...h.h0].map(x => x*h.L), v: [0,0,0], u: [0,0,0]}));
-  let k = 0;
-  const work = () => {
-    if (job !== sweep.job) return;
-    const t0 = performance.now();
-    while (k < 24 && performance.now() - t0 < 10){
-      const rel = k * 15 * DEG; // wind-from angle relative to the nose
-      const U = [-Math.cos(rel)*S.U, -Math.sin(rel)*S.U, 0];
-      for (const h of sub){ h.r = [h.h0[0]*h.L, h.h0[1]*h.L, h.h0[2]*h.L]; h.v = [0,0,0]; surfaceFlow(h, U, h.u);
-        for (let i = 0; i < 160; i++) stepHair(h, h.u[0], h.u[1], h.u[2], 0.0025); }
-      const m = hairMetrics(sub); sweep.res[k] = m.ruff; sweep.eye[k] = m.eye * 4; k++;
+    const P = parts[h.part];
+    const b = surfaceFlow(h, P.U, h.u);
+    const lx = h.p[0]*R*P.sc, ly = h.p[1]*R*P.sc;
+    const wx = P.o[0] + lx*P.c - ly*P.s, wy = P.o[1] + lx*P.s + ly*P.c;
+    turb(wx, wy, t, Uw);
+    const tx = turbOut[0]*P.c + turbOut[1]*P.s, ty = -turbOut[0]*P.s + turbOut[1]*P.c;
+    const amp = (0.15 * (1 - b) + WAKE_TI * b) * Ueff;
+    // hand
+    h.pw *= 0.8;
+    if (petting){
+      const dx = wx - pointer.wx, dy = wy - pointer.wy, dd = Math.hypot(dx, dy);
+      if (dd < pr){
+        const w = smooth(pr, pr * 0.35, dd);
+        let sx, sy, sz;
+        if (pv > 0.02){ sx = (pointer.vx*P.c + pointer.vy*P.s) / pv; sy = (-pointer.vx*P.s + pointer.vy*P.c) / pv; sz = 0; }
+        else { sx = h.r[0]; sy = h.r[1]; sz = h.r[2]; }
+        const sn = sx*h.n[0] + sy*h.n[1] + sz*h.n[2];
+        const tt = norm([sx - sn*h.n[0], sy - sn*h.n[1], sz - sn*h.n[2]]);
+        const c6 = Math.cos(6*DEG), s6 = Math.sin(6*DEG);
+        h.pd = [tt[0]*c6 + h.n[0]*s6, tt[1]*c6 + h.n[1]*s6, tt[2]*c6 + h.n[2]*s6];
+        h.pw = Math.max(h.pw, w);
+      }
     }
-    if (k < 24) setTimeout(work, 0);
-  };
-  setTimeout(work, 30);
-}
-let sweepTimer = 0;
-function scheduleSweep(){ clearTimeout(sweepTimer); sweepTimer = setTimeout(startSweep, 250); }
-
-// ---------- behaviour: turn by feel (run and tumble) ----------
-const feel = {D: 0, ref: 0, timer: 0, dir: 1, refractory: 0};
-function behave(dt, m){
-  const D = m.ruff + 0.02 * m.eye;
-  feel.D += (D - feel.D) * Math.min(1, dt / 0.25);
-  if (!S.auto){ S.omega = 0; feel.ref = feel.D; return; }
-  feel.timer += dt; feel.refractory -= dt;
-  if (feel.timer > 0.5){
-    // getting worse: reverse, then commit to the new direction for a moment
-    if (feel.refractory <= 0 && feel.D > feel.ref + 0.01){ feel.dir = -feel.dir; feel.refractory = 1.0; }
-    feel.ref = feel.D; feel.timer = 0;
+    const ux = h.u[0] + amp*tx, uy = h.u[1] + amp*ty, uz = h.u[2] + amp*turbOut[2];
+    for (let i = 0; i < N; i++) stepHair(h, ux, uy, uz, sdt);
   }
-  const urge = clamp((feel.D - 0.05) / 0.2, 0, 1);  // a little ruffling is tolerated
-  const target = feel.dir * 90 * DEG * urge;
-  S.omega += (target - S.omega) * Math.min(1, dt / 0.2);
-  S.heading += S.omega * dt;
+}
+
+// ---------- behaviour: turn into the wind, a beat late ----------
+function delayed(age){
+  const target = S.t - age;
+  for (let i = hist.length - 1; i >= 0; i--) if (hist[i][0] <= target) return hist[i][1];
+  return hist.length ? hist[0][1] : S.windFrom;
+}
+function behave(dt){
+  hist.push([S.t, S.windFrom]);
+  while (hist.length > 2 && hist[1][0] < S.t - 4) hist.shift();
+  const calm = S.U < 0.8;
+  const idle = 0.5 * Math.sin(S.t * 0.23) + 0.25 * Math.sin(S.t * 0.61 + 1.3);
+  const petHead = pointer.down && pointer.mode === 'pet' && pointer.onHead;
+  let headTarget = calm ? S.body + idle : delayed(0.55) + 0.08 * Math.sin(S.t * 0.9);
+  let bodyTarget = calm ? S.body : delayed(1.8);
+  const kh = petHead ? 4 : 13, kb = 4;
+  // aim the head on the same side the body will turn, within what the neck allows
+  const lim = 1.75;
+  const relTarget = clamp(wrap(headTarget - S.body), -lim, lim), relHead = wrap(S.head - S.body);
+  S.headV += (kh * (relTarget - relHead) - 5.2 * S.headV) * dt;
+  S.head += S.headV * dt;
+  // the body only shuffles round when the head is twisted a long way
+  
+  const needBody = calm ? 0 : smooth(0.6, 1.2, Math.abs(wrap(bodyTarget - S.body)));
+  S.bodyV += (kb * needBody * wrap(bodyTarget - S.body) - 4.0 * S.bodyV) * dt;
+  S.body += S.bodyV * dt;
+  const twist = wrap(S.head - S.body);
+  if (Math.abs(twist) > lim){ S.head = S.body + Math.sign(twist) * lim; S.headV *= 0.5; }
+  // feelings
+  const petting = pointer.down && pointer.mode === 'pet' && performance.now() - pointer.stroke < 350;
+  S.happy = clamp(S.happy + (petting ? dt * 1.2 : -dt * 0.25), 0, 1);
+  S.nextBlink -= dt;
+  if (S.nextBlink < 0){ S.blink = 0.16; S.nextBlink = 2 + Math.random() * 4; }
+  S.blink = Math.max(0, S.blink - dt);
+  S.nextFlick -= dt;
+  if (S.nextFlick < 0){ S.flick[Math.random() < 0.5 ? 0 : 1] = 0.35; S.nextFlick = 2 + Math.random() * 5; }
+  S.flick[0] = Math.max(0, S.flick[0] - dt); S.flick[1] = Math.max(0, S.flick[1] - dt);
+  if (petting && Math.random() < dt * (2 + 4 * S.happy)){
+    hearts.push({x: pointer.x + (Math.random() - 0.5) * 30, y: pointer.y - 10, vy: -30 - Math.random() * 20, life: 1.8, s: 9 + Math.random() * 6, ph: Math.random() * 6});
+  }
+  for (const h of hearts){ h.y += h.vy * dt; h.life -= dt; }
+  hearts = hearts.filter(h => h.life > 0);
+}
+
+// how much fur is in the eyes (the animal squints)
+let eyeFur = 0;
+function measureEyes(){
+  const A = S.A; let n = 0;
+  for (const h of hairs){
+    if (h.part !== 1 || h.name === 'ear') continue;
+    const hh = [h.r[0]/h.L, h.r[1]/h.L, h.r[2]/h.L];
+    if (dot(hh, h.t) < 0 && hh[0] > 0)
+      for (const e of A.EYES) if (segDist(h.p, hh, h.L / A.R, e) < A.eye.r * 1.5){ n++; break; }
+  }
+  eyeFur += (n - eyeFur) * 0.3;
 }
 
 // ---------- drawing ----------
 const cv = document.getElementById('view'), ctx = cv.getContext('2d');
-let W = 0, H = 0, DPR = 1, scale = 1, cx = 0, cy = 0;
+const fur = document.createElement('canvas'), fctx = fur.getContext('2d');
+const soft = document.createElement('canvas'), sctx = soft.getContext('2d');
+let W = 0, H = 0, DPR = 1, scale = 1, cx = 0, cy = 0, rug = null;
 function resize(){
-  const r = cv.getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
-  W = r.width; H = r.height; cv.width = W * DPR; cv.height = H * DPR;
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  cx = W / 2; cy = H / 2;
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  W = innerWidth; H = innerHeight;
+  for (const c of [cv, fur]){ c.width = W * DPR; c.height = H * DPR; }
+  soft.width = Math.ceil(W * DPR / 5); soft.height = Math.ceil(H * DPR / 5);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0); fctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  cx = W / 2; cy = H * 0.48;
+  rug = null;
 }
-function headScale(){ // pixels per metre, head fills about 22% of the short side per R
-  const coatOut = 1 + Math.min(1.6, S.L / S.R);
-  return Math.min(W, H) * 0.25 / (S.R * Math.max(1.6, coatOut * 0.95));
-}
-function toScreen(x, y){ // head-frame metres -> screen
-  const c = Math.cos(S.heading), s = Math.sin(S.heading);
-  return [cx + scale * (x*c - y*s), cy - scale * (x*s + y*c)];
-}
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-function hexMix(a, b, t){
-  const pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16);
-  const ch = (p, sh) => (p >> sh) & 255;
-  const m = sh => Math.round(ch(pa, sh) + (ch(pb, sh) - ch(pa, sh)) * t);
-  return `rgb(${m(16)},${m(8)},${m(0)})`;
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function drawRug(){
+  if (!rug){
+    rug = document.createElement('canvas'); rug.width = W * DPR; rug.height = H * DPR;
+    const g = rug.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const rad = g.createRadialGradient(cx, cy, 10, cx, cy, Math.max(W, H) * 0.7);
+    rad.addColorStop(0, cssv('--rug1')); rad.addColorStop(1, cssv('--rug2'));
+    g.fillStyle = rad; g.fillRect(0, 0, W, H);
+    // a soft knit
+    const r = rng(3); g.globalAlpha = 0.05; g.strokeStyle = '#7a5a3a'; g.lineWidth = 1;
+    for (let i = 0; i < 2600; i++){
+      const x = r() * W, y = r() * H, l = 3 + r() * 4, a = (r() < 0.5 ? 1 : -1) * 0.9;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    g.globalAlpha = 1;
+  }
+  ctx.drawImage(rug, 0, 0, W, H);
 }
 
-// airflow particles, 2D cylinder flow in the world frame for the picture only
-let parts = [];
-function flowAt(x, y){ // world metres, relative to the head's flow centre
-  const Um = S.U, ang = S.from + Math.PI; // direction the wind blows toward
-  const c = Math.cos(ang), s = Math.sin(ang);
-  const xr = x*c + y*s, yr = -x*s + y*c, Rc = 1.25 * S.R, r2 = xr*xr + yr*yr;
+let COLORS = null;
+const LIGHT = norm([-0.45, 0.55, 0.75]);
+const NSH = 5;
+function buildColors(){
+  const A = S.A;
+  COLORS = A.pal.map(hx => {
+    const base = hex(hx), out = [];
+    for (let s = 0; s < NSH; s++){
+      const sh = s / (NSH - 1);
+      const dark = mix(base, [20, 12, 8], (1 - sh) * 0.5);
+      out.push([rgb(dark, 0.9), rgb(mix(dark, [255, 248, 236], 0.1 + 0.18 * sh), 0.75)]);
+    }
+    return out;
+  });
+}
+
+function W2S(x, y){ return [cx + scale * x, cy - scale * y]; }
+function partPt(P, x, y){ // part-local metres -> screen
+  const wx = P.o[0] + (x*P.c - y*P.s) * P.sc, wy = P.o[1] + (x*P.s + y*P.c) * P.sc;
+  return [cx + scale * wx, cy - scale * wy];
+}
+
+function ellipsePath(g, P, E, grow){
+  const R = S.A.R, cr = Math.cos(E.rot || 0), sr = Math.sin(E.rot || 0);
+  g.beginPath();
+  for (let i = 0; i <= 48; i++){
+    const a = i / 48 * Math.PI * 2, lx = E.a[0]*Math.cos(a)*grow, ly = E.a[1]*Math.sin(a)*grow;
+    const [x, y] = partPt(P, (E.c[0] + lx*cr - ly*sr) * R, (E.c[1] + lx*sr + ly*cr) * R);
+    i ? g.lineTo(x, y) : g.moveTo(x, y);
+  }
+  g.closePath();
+}
+function undercoat(g, P, E){
+  const A = S.A, R = A.R;
+  const [x, y] = partPt(P, E.c[0] * R, E.c[1] * R);
+  const rr = Math.max(E.a[0], E.a[1]) * R * scale;
+  const grd = g.createRadialGradient(x - rr*0.3, y - rr*0.35, rr*0.1, x, y, rr * 1.1);
+  const u = hex(A.under);
+  grd.addColorStop(0, rgb(mix(u, hex(A.pal[0]), 0.5))); grd.addColorStop(1, rgb(mix(u, [0, 0, 0], 0.25)));
+  ellipsePath(g, P, E, 0.98); g.fillStyle = grd; g.fill();
+}
+
+function drawHairs(g, group){
+  const A = S.A, R = A.R;
+  const bk = [];
+  const NC = COLORS.length;
+  for (let i = 0; i < NC * NSH * 2; i++) bk.push([]);
+  for (const h of hairs){
+    if (h.part !== group[0] || (group[1] && h.name !== group[1]) || (!group[1] && h.name === 'ear')) continue;
+    const P = parts[h.part], L = h.L;
+    const hh0 = h.r[0]/L, hh1 = h.r[1]/L, hh2 = h.r[2]/L;
+    const rx = h.p[0]*R, ry = h.p[1]*R;
+    let b0 = 0.45*h.h0[0] + 0.55*hh0, b1 = 0.45*h.h0[1] + 0.55*hh1, b2 = 0.45*h.h0[2] + 0.55*hh2 + 1e-6;
+    const bl = Math.hypot(b0, b1, b2); b0 /= bl; b1 /= bl;
+    const A0 = partPt(P, rx, ry);
+    const C0 = partPt(P, rx + b0*L*0.5, ry + b1*L*0.5);
+    const T0 = partPt(P, rx + h.r[0], ry + h.r[1]);
+    if (A.curl){ // a little wave or curl
+      const dx = T0[0] - A0[0], dy = T0[1] - A0[1], k = A.curl * Math.sin(h.seed * 40 + S.t * 0.3) * 0.9;
+      C0[0] += -dy * k; C0[1] += dx * k;
+    }
+    // split the curve at the middle: root half darker, tip half lighter and thinner
+    const m1 = [(A0[0] + C0[0]) / 2, (A0[1] + C0[1]) / 2], m2 = [(C0[0] + T0[0]) / 2, (C0[1] + T0[1]) / 2];
+    const M = [(m1[0] + m2[0]) / 2, (m1[1] + m2[1]) / 2];
+    // light from the upper left, a hair lifted toward the light catches more
+    const nx = h.n[0]*P.c - h.n[1]*P.s, ny = h.n[0]*P.s + h.n[1]*P.c;
+    const lit = clamp(0.3 + 0.8 * (nx*LIGHT[0] + ny*LIGHT[1] + h.n[2]*LIGHT[2]) + 0.25 * hh2, 0, 1);
+    const s = Math.min(NSH - 1, Math.floor(lit * NSH));
+    const base = (h.col * NSH + s) * 2;
+    bk[base].push(A0[0], A0[1], m1[0], m1[1], M[0], M[1]);
+    bk[base + 1].push(M[0], M[1], m2[0], m2[1], T0[0], T0[1]);
+  }
+  const wpx = clamp(A.d * scale * 16, 0.9, 2.1);
+  g.lineCap = 'round';
+  for (let c = 0; c < NC; c++) for (let s = 0; s < NSH; s++) for (let seg = 0; seg < 2; seg++){
+    const B = bk[(c * NSH + s) * 2 + seg]; if (!B.length) continue;
+    g.strokeStyle = COLORS[c][s][seg];
+    g.lineWidth = seg ? wpx * 0.6 : wpx;
+    g.beginPath();
+    for (let i = 0; i < B.length; i += 6){ g.moveTo(B[i], B[i+1]); g.quadraticCurveTo(B[i+2], B[i+3], B[i+4], B[i+5]); }
+    g.stroke();
+  }
+}
+
+function drawEyes(g){
+  const A = S.A, R = A.R, P = parts[1];
+  const squint = clamp(1 - eyeFur / 7, 0.2, 1);
+  const happyClosed = S.happy > 0.45 && pointer.down && pointer.mode === 'pet';
+  const blink = S.blink > 0 ? 0.08 : 1;
+  for (const e of A.EYES){
+    const [x, y] = partPt(P, e[0]*R, e[1]*R), rr = A.eye.r * R * scale;
+    const side = e[1] > 0 ? 1 : -1;
+    g.save(); g.translate(x, y); g.rotate(-S.head + side * 0.35);
+    if (happyClosed){
+      g.strokeStyle = '#1a120c'; g.lineWidth = Math.max(1.5, rr * 0.28); g.lineCap = 'round';
+      g.beginPath(); g.moveTo(-rr, rr*0.25*side); g.quadraticCurveTo(0, -rr*0.6*side, rr, rr*0.25*side); g.stroke();
+    } else {
+      const open = Math.min(squint, blink);
+      g.beginPath(); g.ellipse(0, 0, rr * 1.05, rr * 0.78 * open, 0, 0, Math.PI*2);
+      g.fillStyle = '#140d09'; g.fill();
+      g.save(); g.clip();
+      g.beginPath(); g.arc(rr * 0.15, 0, rr * 0.7, 0, Math.PI*2); g.fillStyle = A.eye.iris; g.fill();
+      g.beginPath();
+      if (A.eye.slit) g.ellipse(rr * 0.15, 0, rr * 0.12, rr * 0.55, Math.PI / 2, 0, Math.PI*2);
+      else g.arc(rr * 0.15, 0, rr * 0.38, 0, Math.PI*2);
+      g.fillStyle = '#0a0605'; g.fill();
+      g.beginPath(); g.arc(rr * 0.45, -rr * 0.25 * side, rr * 0.2, 0, Math.PI*2); g.fillStyle = 'rgba(255,255,255,.9)'; g.fill();
+      g.beginPath(); g.arc(-rr * 0.1, rr * 0.3 * side, rr * 0.09, 0, Math.PI*2); g.fillStyle = 'rgba(255,255,255,.5)'; g.fill();
+      g.restore();
+    }
+    g.restore();
+  }
+}
+
+function drawEars(g, behind){
+  const A = S.A, R = A.R, P = parts[1];
+  if (A.ears === 'flop') return;
+  const Uh = P.U || [0, 0, 0];
+  for (const side of [1, -1]){
+    const i = side > 0 ? 0 : 1;
+    const flick = Math.sin(S.flick[i] / 0.35 * Math.PI * 3) * 0.25 * (S.flick[i] > 0 ? 1 : 0);
+    const wind = clamp(Uh[1] / 20, -0.3, 0.3) * side + clamp(-Uh[0] / 30, -0.2, 0.25);
+    const sway = 0.04 * Math.sin(S.t * 2 + side) + flick + wind * 0.6;
+    let base, tip, wid, outer, inner, tipCol = null;
+    if (A.ears === 'fox'){ base = [-0.2, 0.5]; tip = [-0.78, 1.0]; wid = 0.28; outer = A.pal[0]; inner = '#f2e2cf'; tipCol = '#24160f'; }
+    else if (A.ears === 'cat'){ base = [-0.12, 0.55]; tip = [-0.5, 0.98]; wid = 0.27; outer = A.pal[0]; inner = '#e9b3b0'; }
+    else if (A.ears === 'husky'){ base = [-0.2, 0.5]; tip = [-0.72, 0.95]; wid = 0.28; outer = A.pal[0]; inner = '#d8d4ce'; tipCol = A.pal[2]; }
+    else { base = [0.1, 0.95]; tip = [-0.1, 1.38]; wid = 0.18; outer = A.pal[2]; inner = '#6b4a34'; }
+    const ang = sway * side;
+    const rot = ([x, y]) => { const dx = x - base[0], dy = y * side - base[1] * side; const c = Math.cos(ang), s = Math.sin(ang);
+      return partPt(P, (base[0] + dx*c - dy*s) * R, (base[1]*side + dx*s + dy*c) * R); };
+    const dir = norm([tip[0] - base[0], tip[1] - base[1], 0]);
+    const perp = [-dir[1], dir[0]];
+    const b1 = [base[0] + perp[0]*wid, base[1] + perp[1]*wid], b2 = [base[0] - perp[0]*wid, base[1] - perp[1]*wid];
+    const mid1 = [(b1[0] + tip[0]) / 2 + perp[0]*0.06, (b1[1] + tip[1]) / 2 + perp[1]*0.06];
+    const mid2 = [(b2[0] + tip[0]) / 2 - perp[0]*0.06, (b2[1] + tip[1]) / 2 - perp[1]*0.06];
+    const pB1 = rot(b1), pB2 = rot(b2), pT = rot(tip), pM1 = rot(mid1), pM2 = rot(mid2);
+    g.beginPath(); g.moveTo(...pB1); g.quadraticCurveTo(...pM1, ...pT); g.quadraticCurveTo(...pM2, ...pB2); g.closePath();
+    const grd = g.createLinearGradient(...pB1, ...pT);
+    grd.addColorStop(0, outer); grd.addColorStop(tipCol ? 0.6 : 1, outer); if (tipCol) grd.addColorStop(0.85, tipCol), grd.addColorStop(1, tipCol);
+    g.fillStyle = grd; g.fill();
+    // inner ear with a fringe of soft hairs
+    const ib1 = [base[0] + perp[0]*wid*0.45 + dir[0]*0.06, base[1] + perp[1]*wid*0.45 + dir[1]*0.06];
+    const ib2 = [base[0] - perp[0]*wid*0.45 + dir[0]*0.06, base[1] - perp[1]*wid*0.45 + dir[1]*0.06];
+    const it = [base[0] + (tip[0] - base[0]) * 0.72, base[1] + (tip[1] - base[1]) * 0.72];
+    g.beginPath(); g.moveTo(...rot(ib1)); g.quadraticCurveTo(...rot([(ib1[0]+it[0])/2, (ib1[1]+it[1])/2]), ...rot(it));
+    g.quadraticCurveTo(...rot([(ib2[0]+it[0])/2, (ib2[1]+it[1])/2]), ...rot(ib2)); g.closePath();
+    g.fillStyle = inner; g.globalAlpha = 0.85; g.fill(); g.globalAlpha = 1;
+    g.strokeStyle = A.ears === 'cat' ? 'rgba(250,245,240,.7)' : 'rgba(255,250,244,.55)'; g.lineWidth = 0.8;
+    g.beginPath();
+    for (let k = 0; k < 9; k++){
+      const f = k / 8, px0 = base[0] + (it[0]-base[0]) * f * 0.9, py0 = base[1] + (it[1]-base[1]) * f * 0.9;
+      const a0 = rot([px0, py0]), a1 = rot([px0 + dir[0]*0.18 + perp[0]*(k%2 ? 0.1 : -0.1), py0 + dir[1]*0.18 + perp[1]*(k%2 ? 0.1 : -0.1)]);
+      g.moveTo(...a0); g.lineTo(...a1);
+    }
+    g.stroke();
+  }
+  if (A.ears === 'bison') drawHorns(g);
+}
+function drawHorns(g){
+  const A = S.A, R = A.R, P = parts[1];
+  for (const side of [1, -1]){
+    const pts = [[0.15, 0.75], [0.0, 1.3], [0.12, 1.62], [0.45, 1.72]];
+    const wid = [0.2, 0.15, 0.09, 0.015];
+    const L = [], Rr = [];
+    for (let i = 0; i < pts.length; i++){
+      const p = pts[i], q = pts[Math.min(i + 1, pts.length - 1)], o = pts[Math.max(i - 1, 0)];
+      const d = norm([q[0]-o[0], q[1]-o[1], 0]), pr = [-d[1], d[0]];
+      L.push(partPt(P, (p[0] + pr[0]*wid[i]) * R, (p[1] + pr[1]*wid[i]) * side * R));
+      Rr.push(partPt(P, (p[0] - pr[0]*wid[i]) * R, (p[1] - pr[1]*wid[i]) * side * R));
+    }
+    g.beginPath(); g.moveTo(...L[0]);
+    for (let i = 1; i < L.length; i++) g.lineTo(...L[i]);
+    for (let i = Rr.length - 1; i >= 0; i--) g.lineTo(...Rr[i]);
+    g.closePath();
+    const grd = g.createLinearGradient(...partPt(P, 0.2*R, 0.7*side*R), ...partPt(P, 0.42*R, 1.5*side*R));
+    grd.addColorStop(0, '#8d857a'); grd.addColorStop(0.55, '#4a443e'); grd.addColorStop(1, '#16130f');
+    g.fillStyle = grd; g.fill();
+  }
+}
+
+function drawNose(g){
+  const A = S.A, R = A.R, P = parts[1];
+  const sniff = 1 + 0.06 * Math.max(0, Math.sin(S.t * 9)) * (Math.sin(S.t * 0.7) > 0.6 ? 1 : 0);
+  const [x, y] = partPt(P, A.NOSE[0] * R, 0), rr = (S.key === 'cat' ? 0.09 : S.key === 'bison' ? 0.2 : 0.13) * R * scale * sniff;
+  g.save(); g.translate(x, y); g.rotate(-S.head);
+  g.beginPath(); g.ellipse(0, 0, rr * 0.8, rr * 1.15, 0, 0, Math.PI * 2); g.fillStyle = A.nose; g.fill();
+  if (S.key === 'bison'){ g.fillStyle = '#000'; for (const s of [1, -1]){ g.beginPath(); g.ellipse(rr*0.2, s*rr*0.45, rr*0.22, rr*0.18, 0, 0, Math.PI*2); g.fill(); } }
+  g.beginPath(); g.ellipse(-rr * 0.2, -rr * 0.35, rr * 0.25, rr * 0.18, 0, 0, Math.PI * 2); g.fillStyle = 'rgba(255,255,255,.35)'; g.fill();
+  g.restore();
+  if (A.whiskers){
+    const Uh = P.U || [0, 0, 0];
+    g.strokeStyle = 'rgba(255,252,246,.7)'; g.lineWidth = 0.7; g.lineCap = 'round';
+    for (const s of [1, -1]) for (let i = 0; i < 4; i++){
+      const r0 = [A.NOSE[0] - 0.22 - i*0.04, 0.17 * s];
+      const r1 = [r0[0] - 0.2 - i*0.12 + clamp(Uh[0] / 60, -0.2, 0.2), (0.85 + i*0.1) * s + clamp(Uh[1] / 50, -0.25, 0.25)];
+      const sw = 0.03 * Math.sin(S.t * 3 + i + s);
+      const a = partPt(P, r0[0]*R, r0[1]*R), b = partPt(P, r1[0]*R, (r1[1] + sw)*R), c = partPt(P, (r0[0] + r1[0]) / 2 * R, ((r0[1] + r1[1]) / 2 + 0.06*s) * R);
+      g.beginPath(); g.moveTo(...a); g.quadraticCurveTo(...c, ...b); g.stroke();
+    }
+  }
+}
+
+// drifting motes show the wind
+let motes = [];
+function flowAt(x, y){
+  const ang = S.windFrom + Math.PI, c = Math.cos(ang), s = Math.sin(ang);
+  const xr = x*c + y*s, yr = -x*s + y*c, Rc = 2.0 * S.A.R, r2 = xr*xr + yr*yr;
   if (r2 < Rc*Rc) return null;
   const k = Rc*Rc / (r2*r2);
-  let u = Um * (1 - k * (xr*xr - yr*yr)), v = -Um * 2 * k * xr * yr;
-  const wakeW = Rc * (1 + 0.25 * Math.max(0, xr) / Rc);
-  if (xr > 0 && Math.abs(yr) < wakeW){ const f = 0.35 + 0.65 * smooth(Rc, 6*Rc, xr) * smooth(0, wakeW, Math.abs(yr)); u *= f; v *= f; }
+  let u = 1 - k * (xr*xr - yr*yr), v = -2 * k * xr * yr;
+  if (xr > 0 && Math.abs(yr) < Rc * 1.2){ const f = 0.35 + 0.65 * smooth(Rc, 5*Rc, xr); u *= f; v *= f; }
   return [u*c - v*s, u*s + v*c];
 }
-function flowCentre(){ const c = Math.cos(S.heading), s = Math.sin(S.heading), x = 0.35 * S.R; return [x*c, x*s]; }
-function spawn(p){
-  const ext = Math.max(W, H) / scale * 0.75, ang = S.from;
-  const lat = (Math.random()*2 - 1) * ext;
-  p.x = Math.cos(ang)*ext - Math.sin(ang)*lat; p.y = Math.sin(ang)*ext + Math.cos(ang)*lat;
-  p.age = 0; p.life = 1.5 + Math.random()*2; p.px = p.x; p.py = p.y;
+function spawnMote(m, anywhere){
+  const ext = Math.max(W, H) / scale * 0.62, ang = S.windFrom;
+  const lat = (Math.random()*2 - 1) * ext, back = anywhere ? (Math.random()*2 - 1) * ext : ext;
+  m.x = Math.cos(ang)*back - Math.sin(ang)*lat; m.y = Math.sin(ang)*back + Math.cos(ang)*lat;
+  m.r = 0.8 + Math.random() * 1.8; m.a = 0.15 + Math.random() * 0.3; m.tr = [];
+  m.life = 3 + Math.random() * 4; m.age = 0;
 }
-function updateParts(dt){
-  if (!parts.length) for (let i = 0; i < 260; i++){ const p = {}; spawn(p); p.age = Math.random()*p.life; parts.push(p); }
-  const fc = flowCentre(), lim = Math.max(W, H) / scale;
-  for (const p of parts){
-    p.px = p.x; p.py = p.y;
-    const f = flowAt(p.x - fc[0], p.y - fc[1]);
-    const vis = 0.06; // world speed shown at 6% so streaks stay readable
-    if (!f){ spawn(p); continue; }
-    p.x += f[0] * dt * vis * S.ts; p.y += f[1] * dt * vis * S.ts; p.age += dt;
-    if (p.age > p.life || Math.abs(p.x) > lim || Math.abs(p.y) > lim) spawn(p);
+function updateMotes(dt){
+  if (!motes.length) for (let i = 0; i < 110; i++){ const m = {}; spawnMote(m, true); motes.push(m); }
+  const lim = Math.max(W, H) / scale * 0.7, U = S.U;
+  for (const m of motes){
+    const f = flowAt(m.x, m.y);
+    if (!f || m.age > m.life || Math.abs(m.x) > lim || Math.abs(m.y) > lim){ spawnMote(m, U < 0.8); continue; }
+    const sp = (0.004 + 0.022 * U) * 1.2;
+    m.x += f[0] * sp * dt + Math.sin(S.t + m.r * 9) * 0.0008; m.y += f[1] * sp * dt + Math.cos(S.t * 0.8 + m.r * 7) * 0.0008;
+    m.tr.push(m.x, m.y); if (m.tr.length > 16) m.tr.splice(0, 2);
+    m.age += dt;
   }
 }
-
-function drawEllipse(E, fill){
-  ctx.beginPath();
-  const pts = 64;
-  for (let i = 0; i <= pts; i++){
-    const a = i / pts * Math.PI * 2;
-    const [x, y] = toScreen((E.c[0] + E.a[0]*Math.cos(a)) * S.R, (E.c[1] + E.a[1]*Math.sin(a)) * S.R);
-    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-  }
-  ctx.fillStyle = fill; ctx.fill();
-}
-
-function draw(m){
-  const C = S.colors;
-  scale = headScale();
-  ctx.clearRect(0, 0, W, H);
-  // airflow
-  if (S.flow){
-    const fc = flowCentre();
-    ctx.strokeStyle = css('--calm'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    for (const p of parts){
-      const [ax, ay] = [cx + scale*p.px, cy - scale*p.py], [bx, by] = [cx + scale*p.x, cy - scale*p.y];
-      const dx = bx - ax, dy = by - ay; const l = Math.hypot(dx, dy) || 1, len = 10;
-      ctx.moveTo(bx - dx/l*len, by - dy/l*len); ctx.lineTo(bx, by);
-    }
-    ctx.stroke(); ctx.globalAlpha = 1;
-  }
-  // neck stub
-  ctx.save();
-  const [nx0, ny0] = toScreen(-0.6*S.R, 0); const [nx1, ny1] = toScreen(-2.2*S.R, 0);
-  ctx.strokeStyle = hexMix(C.coat, css('--field').startsWith('#') ? css('--field') : '#ece4d6', 0.35); ctx.lineCap = 'round'; ctx.lineWidth = 1.3 * S.R * scale;
-  ctx.beginPath(); ctx.moveTo(nx0, ny0); ctx.lineTo(nx1, ny1); ctx.stroke(); ctx.restore();
-  // skin and undercoat
-  drawEllipse(SKULL, C.under); drawEllipse(SNOUT, C.under);
-  // eyes (under the fur, so hairs can cover them)
-  const squint = clamp(1 - m.eye / 8, 0.15, 1);
-  for (const e of EYES){
-    const [x, y] = toScreen(e[0]*S.R, e[1]*S.R), rr = EYE_R * S.R * scale;
-    ctx.save(); ctx.translate(x, y); ctx.rotate(-S.heading + (e[1] > 0 ? -0.5 : 0.5));
-    ctx.beginPath(); ctx.ellipse(0, 0, rr * 1.15, rr * 0.75 * squint, 0, 0, Math.PI*2);
-    ctx.fillStyle = '#1a120c'; ctx.fill();
-    ctx.beginPath(); ctx.arc(rr*0.3, -rr*0.2*squint, rr*0.22*squint, 0, Math.PI*2); ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fill();
-    ctx.restore();
-  }
-  // hairs
-  const cr = Math.cos(RUFF_DEG * DEG), hot = css('--hot'), calm = css('--calm');
-  const cH = Math.cos(S.heading), sH = Math.sin(S.heading);
+function drawMotes(){
+  const fadeIn = clamp(S.U / 4, 0.25, 1);
   ctx.lineCap = 'round';
-  const px = S.R * scale, NB = 12;
-  // hairs are batched into a few colour buckets so each bucket is one stroke call
-  const buckets = Array.from({length: NB * 2}, () => []);
-  for (const h of hairs){
-    const L = h.L, hh = [h.r[0]/L, h.r[1]/L, h.r[2]/L];
-    const rx = h.p[0]*S.R, ry = h.p[1]*S.R;
-    const bend = norm([0.45*h.h0[0] + 0.55*hh[0], 0.45*h.h0[1] + 0.55*hh[1], 0.45*h.h0[2] + 0.55*hh[2] + 1e-6]);
-    const mx = rx + bend[0]*L*0.5, my = ry + bend[1]*L*0.5, tx = rx + h.r[0], ty = ry + h.r[1];
-    const q = S.heat ? clamp((1 - dot(hh, h.h0)) / (1 - cr), 0, 1.6) / 1.6 : clamp(h.p[2], 0, 1);
-    const k = Math.min(NB - 1, Math.floor(q * NB)) + (h.isSnout ? NB : 0);
-    buckets[k].push(
-      cx + scale*(rx*cH - ry*sH), cy - scale*(rx*sH + ry*cH),
-      cx + scale*(mx*cH - my*sH), cy - scale*(mx*sH + my*cH),
-      cx + scale*(tx*cH - ty*sH), cy - scale*(tx*sH + ty*cH));
+  for (const m of motes){
+    const al = m.a * fadeIn * smooth(0, 0.6, m.age) * smooth(m.life, m.life - 0.8, m.age);
+    if (m.tr.length >= 4){
+      ctx.strokeStyle = `rgba(150,118,88,${al * 0.35})`; ctx.lineWidth = m.r * 0.8;
+      ctx.beginPath(); ctx.moveTo(...W2S(m.tr[0], m.tr[1]));
+      for (let i = 2; i < m.tr.length; i += 2) ctx.lineTo(...W2S(m.tr[i], m.tr[i+1]));
+      ctx.stroke();
+    }
+    const [x, y] = W2S(m.x, m.y);
+    ctx.beginPath(); ctx.arc(x, y, m.r, 0, Math.PI*2); ctx.fillStyle = `rgba(150,118,88,${al * 0.8})`; ctx.fill();
   }
-  const wide = Math.max(0.8, Math.min(2.2, S.d * scale * 14));
-  for (let k = 0; k < buckets.length; k++){
-    const B = buckets[k]; if (!B.length) continue;
-    const q = ((k % NB) + 0.5) / NB;
-    ctx.strokeStyle = S.heat ? hexMix(calm, hot, q) : hexMix(C.coat, C.tip, 0.15 + 0.35 * q);
-    ctx.lineWidth = k >= NB ? 0.9 : wide;
-    ctx.beginPath();
-    for (let i = 0; i < B.length; i += 6){ ctx.moveTo(B[i], B[i+1]); ctx.quadraticCurveTo(B[i+2], B[i+3], B[i+4], B[i+5]); }
+}
+
+function drawWindMark(){
+  if (S.U < 0.8) return;
+  const ext = Math.min(W, H) * 0.42, a = S.windFrom;
+  const x = cx + Math.cos(a) * ext, y = cy - Math.sin(a) * ext;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(-a + Math.PI);
+  ctx.strokeStyle = cssv('--muted'); ctx.lineWidth = 1.8; ctx.lineCap = 'round'; ctx.globalAlpha = 0.8;
+  const n = S.U > 12 ? 3 : S.U > 6 ? 2 : 1;
+  for (let i = 0; i < 3; i++){
+    if (i >= n && i !== 1) continue;
+    const off = (i - 1) * 11, ph = (S.t * 1.5 + i * 0.3) % 1;
+    ctx.beginPath(); ctx.moveTo(-22 + ph * 8, off); ctx.bezierCurveTo(-4, off - 6, 8, off + 6, 28 + ph * 8, off);
     ctx.stroke();
   }
-  // ears, nose, whiskers
-  for (const sgn of [1, -1]){
-    const base = [[-0.15, 0.62*sgn], [-0.65, 0.78*sgn], [-0.55, 1.35*sgn]];
-    ctx.beginPath();
-    base.forEach(([x, y], i) => { const [X, Y] = toScreen(x*S.R, y*S.R); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
-    ctx.closePath(); ctx.fillStyle = C.ear; ctx.fill();
+  ctx.restore();
+}
+
+function drawHearts(){
+  for (const h of hearts){
+    const al = clamp(h.life / 1.6, 0, 1), x = h.x + Math.sin(h.life * 4 + h.ph) * 6, y = h.y, s = h.s;
+    ctx.save(); ctx.translate(x, y); ctx.globalAlpha = al * 0.9; ctx.fillStyle = '#e8777d';
+    ctx.beginPath(); ctx.moveTo(0, s * 0.35);
+    ctx.bezierCurveTo(-s, -s * 0.35, -s * 0.45, -s, 0, -s * 0.45);
+    ctx.bezierCurveTo(s * 0.45, -s, s, -s * 0.35, 0, s * 0.35);
+    ctx.fill(); ctx.restore();
   }
-  const [nX, nY] = toScreen(NOSE[0]*S.R*0.98, 0);
-  ctx.beginPath(); ctx.arc(nX, nY, 0.11*px, 0, Math.PI*2); ctx.fillStyle = '#1a120c'; ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 0.7;
-  for (const sgn of [1, -1]) for (let i = 0; i < 4; i++){
-    const [a, b] = toScreen((1.42 - i*0.04)*S.R, 0.22*sgn*S.R);
-    const [c2, d2] = toScreen((1.25 - i*0.18)*S.R, (0.95 + i*0.08)*sgn*S.R);
-    ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c2, d2); ctx.stroke();
+}
+
+function draw(){
+  const A = S.A, R = A.R;
+  scale = Math.min(W, H * 0.92) * 0.5 * 0.88 / (5.0 * R);
+  drawRug();
+  // soft shadow on the rug
+  const P0 = parts[0], P1 = parts[1];
+  for (const [P, E, k] of [[P0, A.BODY, 1.25], [P1, A.SK, 1.35], [P0, A.TAIL, 1.2]]){
+    const [x, y] = partPt(P, (E.c[0] + 0.15) * R, (E.c[1] - 0.25) * R);
+    const rr = Math.max(E.a[0], E.a[1]) * R * scale * k;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rr);
+    g.addColorStop(0, 'rgba(60,35,20,.22)'); g.addColorStop(1, 'rgba(60,35,20,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rr, 0, Math.PI*2); ctx.fill();
   }
-  // wind arrow
-  const ext = Math.min(W, H) * 0.40, ang = S.from;
-  const ax = cx + Math.cos(ang)*ext, ay = cy - Math.sin(ang)*ext;
-  const bx = cx + Math.cos(ang)*(ext - 58), by = cy - Math.sin(ang)*(ext - 58);
-  ctx.strokeStyle = css('--accent'); ctx.fillStyle = css('--accent'); ctx.lineWidth = 4; ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-  const hd = Math.atan2(by - ay, bx - ax);
-  ctx.beginPath(); ctx.moveTo(bx + Math.cos(hd)*10, by + Math.sin(hd)*10);
-  ctx.lineTo(bx + Math.cos(hd + 2.4)*14, by + Math.sin(hd + 2.4)*14);
-  ctx.lineTo(bx + Math.cos(hd - 2.4)*14, by + Math.sin(hd - 2.4)*14); ctx.closePath(); ctx.fill();
-  ctx.font = '600 12px system-ui, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillText(`wind ${S.U.toFixed(1)} m/s`, cx + Math.cos(ang)*(ext + 16), cy - Math.sin(ang)*(ext + 16) + 4);
+  drawMotes();
+  // the whole animal goes onto its own layer, which is then drawn twice: blurred for the down, sharp on top
+  fctx.clearRect(0, 0, W, H);
+  undercoat(fctx, P0, A.TAIL); undercoat(fctx, P0, A.BODY);
+  drawHairs(fctx, [0]);
+  for (const E of A.EARS){ undercoat(fctx, P1, E); }
+  drawHairs(fctx, [1, 'ear']);
+  undercoat(fctx, P1, A.SK); undercoat(fctx, P1, A.snout);
+  drawEyes(fctx);
+  drawHairs(fctx, [1]);
+  drawEars(fctx);
+  drawNose(fctx);
+  sctx.clearRect(0, 0, soft.width, soft.height);
+  sctx.drawImage(fur, 0, 0, soft.width, soft.height);
+  ctx.save(); ctx.imageSmoothingQuality = 'high';
+  ctx.globalAlpha = 0.35; ctx.drawImage(soft, -10, -8, W + 20, H + 16);
+  ctx.globalAlpha = 0.6; ctx.drawImage(soft, -3, -2, W + 6, H + 4); ctx.restore();
+  ctx.drawImage(fur, 0, 0, W, H);
+  drawWindMark();
+  drawHearts();
 }
 
-function relAngle(){ let r = (S.from - S.heading) / DEG; r = ((r % 360) + 540) % 360 - 180; return r; }
-
-function drawPolar(){
-  const pc = document.getElementById('polar'), g = pc.getContext('2d');
-  const w = pc.width, h = pc.height, c = w / 2, R = w * 0.4;
-  g.clearRect(0, 0, w, h);
-  g.strokeStyle = css('--line'); g.lineWidth = 1; g.fillStyle = css('--muted'); g.font = '11px system-ui'; g.textAlign = 'center';
-  for (const f of [0.25, 0.5, 0.75, 1]){ g.beginPath(); g.arc(c, c, R*f, 0, Math.PI*2); g.stroke(); }
-  g.fillText('nose', c, c - R - 8); g.fillText('tail', c, c + R + 16);
-  g.fillText('left', c - R - 18, c + 4); g.fillText('right', c + R + 20, c + 4);
-  g.fillText('100%', c + 16, c - R + 12);
-  const pt = (relDeg, f) => [c - Math.sin(relDeg*DEG)*R*f, c - Math.cos(relDeg*DEG)*R*f];
-  if (sweep.res.every(x => x !== null)){
-    g.beginPath();
-    for (let k = 0; k <= 24; k++){ const [x, y] = pt(k*15, Math.min(1, sweep.res[k % 24])); k ? g.lineTo(x, y) : g.moveTo(x, y); }
-    g.fillStyle = css('--hot'); g.globalAlpha = 0.22; g.fill(); g.globalAlpha = 1; g.strokeStyle = css('--hot'); g.lineWidth = 2; g.stroke();
-  } else { g.fillText('computing…', c, c + 4); }
-  const rel = relAngle(), cur = live.ruff;
-  const [x, y] = pt(rel, Math.min(1, cur));
-  g.strokeStyle = css('--accent'); g.setLineDash([3, 3]); g.beginPath(); g.moveTo(c, c); g.lineTo(...pt(rel, 1)); g.stroke(); g.setLineDash([]);
-  g.beginPath(); g.arc(x, y, 5, 0, Math.PI*2); g.fillStyle = css('--accent'); g.fill();
+// ---------- controls ----------
+const animalsEl = document.getElementById('animals'), windsEl = document.getElementById('winds');
+for (const k of Object.keys(ANIMALS)){
+  const b = document.createElement('button'); b.textContent = NAMES[k]; b.dataset.k = k;
+  b.onclick = () => choose(k); animalsEl.appendChild(b);
 }
-
-// ---------- UI ----------
-const $ = id => document.getElementById(id);
-const live = {ruff: 0, eye: 0, lift: 0};
-function fmtRel(r){ const a = Math.abs(r); if (a < 3) return 'dead ahead'; if (a > 177) return 'straight behind'; return `${a.toFixed(0)}° ${r > 0 ? 'left' : 'right'}`; }
-function beaufort(U){ const t = [0.5,1.6,3.4,5.5,8,10.8,13.9,17.2,20.8,24.5]; let b = 0; while (b < t.length && U >= t[b]) b++; return b; }
-function updateText(m){
-  const rel = relAngle(), a = Math.abs(rel);
-  $('sRel').textContent = fmtRel(rel);
-  $('sRuff').textContent = (m.ruff*100).toFixed(0) + '%';
-  $('sEye').textContent = m.eye;
-  $('sLift').textContent = m.lift.toFixed(0) + '°';
-  let cap;
-  if (S.U < 0.5) cap = 'No wind. Every hair rests at its lie angle.';
-  else if (a < 35) cap = 'Facing into the wind: the flow runs with the grain and presses the coat flat.';
-  else if (a < 110) cap = 'Crosswind: the flow crosses the grain, and the fur starts to part and lift on the windward side.';
-  else cap = 'Wind from behind runs against the grain, gets under the hairs and throws them forward into the face.';
-  $('caption').textContent = cap;
-  const h0 = hairs[0];
-  const Lc = S.L, I = Math.PI * S.d**4 / 64, k = 4*S.E*I/Lc**3, mm = RHO_K*Math.PI*S.d*S.d/4*Lc/3;
-  $('hud').innerHTML = `<b>${S.preset}</b> · head radius ${(S.R*100).toFixed(1)} cm · crown hair ${(S.L*1000).toFixed(0)} mm × ${(S.d*1e6).toFixed(0)} µm, natural frequency ≈ ${(Math.sqrt(k/mm)/2/Math.PI).toFixed(0)} Hz · Beaufort ${beaufort(S.U)} · true scale${S.ts < 1 ? ` · slow motion ×${S.ts}` : ''}`;
+for (const [label, U] of WINDS){
+  const b = document.createElement('button'); b.textContent = label; b.dataset.u = U;
+  b.onclick = () => { S.Uset = U; mark(); }; windsEl.appendChild(b);
 }
-
-const sliders = {
-  U:   [v => S.U = +v, v => `${(+v).toFixed(1)} m/s`, true],
-  from:[v => S.from = +v*DEG, v => `${v}°`, false],
-  TI:  [v => S.TI = +v, v => `${Math.round(v*100)}%`, false],
-  ts:  [v => S.ts = +v, v => `×${(+v).toFixed(2)}`, false],
-  L:   [v => S.L = v/1000, v => `${v} mm`, true],
-  d:   [v => S.d = v*1e-6, v => `${v} µm`, true],
-  E:   [v => S.E = v*1e9, v => `${(+v).toFixed(1)} GPa`, true],
-  th0: [v => S.th0 = v*DEG, v => `${v}°`, true],
-  a:   [v => S.a = +v, v => (+v).toFixed(1), true],
-};
-for (const [id, [set, fmt, coat]] of Object.entries(sliders)){
-  const el = $(id), out = $('o' + id);
-  const apply = () => { set(el.value); out.textContent = fmt(el.value); if (coat){ if (id !== 'U') configureHairs(); scheduleSweep(); } };
-  el.addEventListener('input', apply); out.textContent = fmt(el.value);
+function mark(){
+  animalsEl.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === S.key));
+  windsEl.querySelectorAll('button').forEach(b => b.classList.toggle('on', +b.dataset.u === S.Uset));
 }
-function syncFrom(){ let d = Math.round(((S.from/DEG) % 360 + 360) % 360) % 360; $('from').value = d; $('ofrom').textContent = d + '°'; }
+function choose(k){ buildAnimal(k); frames(); mark(); motes = []; }
 
-function applyPreset(name){
-  const p = PRESETS[name]; S.preset = name; S.colors = p; S.R = p.R;
-  for (const k of ['L', 'd', 'E', 'th0', 'a']){ $(k).value = p[k]; $(k).dispatchEvent(new Event('input')); }
-  document.querySelectorAll('#presets button').forEach(b => b.classList.toggle('on', b.textContent === name));
-  configureHairs(); scheduleSweep(); parts = [];
+function onAnimal(px, py){
+  const A = S.A, R = A.R;
+  const wx = (px - cx) / scale, wy = -(py - cy) / scale;
+  const hit = (P, E, grow) => {
+    const x = wx - P.o[0], y = wy - P.o[1];
+    const lx = (x*P.c + y*P.s) / R / P.sc - E.c[0], ly = (-x*P.s + y*P.c) / R / P.sc - E.c[1];
+    const cr = Math.cos(-(E.rot || 0)), sr = Math.sin(-(E.rot || 0));
+    const ex = lx*cr - ly*sr, ey = lx*sr + ly*cr;
+    return (ex / E.a[0])**2 + (ey / E.a[1])**2 < grow;
+  };
+  const head = hit(parts[1], A.SK, 1.5) || hit(parts[1], A.snout, 1.6);
+  return {any: head || hit(parts[0], A.BODY, 1.35) || hit(parts[0], A.TAIL, 1.5), head};
 }
-for (const name of Object.keys(PRESETS)){
-  const b = document.createElement('button'); b.textContent = name; b.onclick = () => applyPreset(name); $('presets').appendChild(b);
+function setPointer(e){
+  const now = performance.now() / 1000, px = e.clientX, py = e.clientY;
+  const wx = (px - cx) / scale, wy = -(py - cy) / scale;
+  const dt = Math.max(1/240, now - pointer.lastT);
+  if (pointer.lastT){ const k = Math.min(1, dt / 0.06); pointer.vx += ((wx - pointer.wx) / dt - pointer.vx) * k; pointer.vy += ((wy - pointer.wy) / dt - pointer.vy) * k; }
+  pointer.x = px; pointer.y = py; pointer.wx = wx; pointer.wy = wy; pointer.lastT = now;
 }
-const tog = (id, key) => { const b = $(id); b.onclick = () => { S[key] = !S[key]; b.classList.toggle('on', S[key]); }; b.classList.toggle('on', S[key]); };
-tog('bTurn', 'auto'); tog('bHeat', 'heat'); tog('bFlow', 'flow');
-
-// dragging: on the head turns it, elsewhere moves the wind
-let drag = null;
+function windToward(e){
+  const a = Math.atan2(-(e.clientY - cy), e.clientX - cx);
+  S.windFrom += wrap(a - S.windFrom);
+}
 cv.addEventListener('pointerdown', e => {
-  const r = cv.getBoundingClientRect(), x = e.clientX - r.left - cx, y = -(e.clientY - r.top - cy);
-  drag = Math.hypot(x, y) < 1.6 * S.R * scale ? 'head' : 'wind';
-  if (drag === 'head'){ S.auto = false; $('bTurn').classList.remove('on'); }
-  cv.setPointerCapture(e.pointerId); cv.style.cursor = 'grabbing'; moveDrag(e);
+  setPointer(e); pointer.vx = pointer.vy = 0;
+  const h = onAnimal(e.clientX, e.clientY);
+  pointer.down = true; pointer.mode = h.any ? 'pet' : 'wind'; pointer.onHead = h.head;
+  if (pointer.mode === 'wind'){ windToward(e); if (S.Uset < 0.8){ S.Uset = 4; mark(); } }
+  cv.setPointerCapture(e.pointerId);
 });
-function moveDrag(e){
-  if (!drag) return;
-  const r = cv.getBoundingClientRect(), x = e.clientX - r.left - cx, y = -(e.clientY - r.top - cy);
-  const ang = Math.atan2(y, x);
-  if (drag === 'head') S.heading = ang; else { S.from = ang; syncFrom(); parts = []; }
-}
-cv.addEventListener('pointermove', moveDrag);
-const endDrag = () => { if (drag === 'wind') scheduleSweep(); drag = null; cv.style.cursor = 'grab'; };
-cv.addEventListener('pointerup', endDrag); cv.addEventListener('pointercancel', endDrag);
+cv.addEventListener('pointermove', e => {
+  if (pointer.down && pointer.mode === 'pet' && Math.hypot(e.clientX - pointer.x, e.clientY - pointer.y) > 0.5) pointer.stroke = performance.now();
+  setPointer(e);
+  if (pointer.down && pointer.mode === 'wind') windToward(e);
+  if (pointer.down && pointer.mode === 'pet') pointer.onHead = onAnimal(e.clientX, e.clientY).head;
+  if (!pointer.down) cv.style.cursor = onAnimal(e.clientX, e.clientY).any ? 'grab' : 'crosshair';
+});
+const up = () => { pointer.down = false; pointer.mode = null; };
+cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
 window.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT') return;
-  const step = (e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowRight' ? -1 : 0) * 5 * DEG;
-  if (!step) return; e.preventDefault();
-  if (e.shiftKey){ S.from += step; syncFrom(); parts = []; } else S.heading += step;
+  if (e.key === 'ArrowLeft') S.windFrom += 10 * DEG;
+  else if (e.key === 'ArrowRight') S.windFrom -= 10 * DEG;
+  else if (e.key === ' '){ S.gust = 1.6; e.preventDefault(); }
 });
 
-// ---------- loop ----------
-buildHairs(); applyPreset('Red fox');
-S.from = parseFloat($('from').value) * DEG; syncFrom();
+// ---------- go ----------
 resize(); window.addEventListener('resize', resize);
-let last = performance.now(), statT = 0;
+choose('fox');
+let last = performance.now(), eyeTick = 0;
 function frame(now){
   const dt = Math.min(1/30, (now - last) / 1000); last = now;
+  pointer.vx *= Math.pow(0.02, dt); pointer.vy *= Math.pow(0.02, dt);
+  behave(dt);
   simulate(dt);
-  const m = hairMetrics(hairs); Object.assign(live, m);
-  behave(dt, m);
-  if (S.flow) updateParts(dt);
-  draw(m);
-  statT += dt; if (statT > 0.15){ statT = 0; updateText(m); drawPolar(); }
+  if (++eyeTick % 3 === 0) measureEyes();
+  updateMotes(dt);
+  draw();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-window.__intoTheWind = {S, hairs: () => hairs, metrics: () => hairMetrics(hairs), sweep: () => sweep, relAngle};
+window.__pets = {S, choose, hairs: () => hairs, pointer};
 </script>
 </body>
 </html>
